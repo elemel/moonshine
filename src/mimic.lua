@@ -47,13 +47,15 @@ local function values(tab)
     end
 end
 
-local function iter(items)
-    if type(items) == "string" then
-        return chars(items)
-    elseif type(items) == "table" then
-        return values(items)
+local function iter(iterable)
+    if type(iterable) == "function" then
+        return iterable
+    elseif type(iterable) == "string" then
+        return chars(iterable)
+    elseif type(iterable) == "table" then
+        return values(iterable)
     else
-        return items
+        error("argument is not iterable")
     end
 end
 
@@ -105,7 +107,7 @@ local function enum(items)
     end
 end
 
-local function toarray(items)
+local function to_array(items)
     local result = {}
     for index, item in enum(items) do
         result[index] = item
@@ -121,8 +123,8 @@ local function dict(kvpairs)
     return result
 end
 
-local function filter(pred, items)
-    local nextitem = iter(items)
+local function filter(pred, iterable)
+    local nextitem = iter(iterable)
     return function()
         local item = nextitem()
         if item ~= nil and pred(item) then
@@ -133,8 +135,8 @@ local function filter(pred, items)
     end
 end
 
-local function map(func, items)
-    local nextitem = iter(items)
+local function map(func, iterable)
+    local nextitem = iter(iterable)
     return function()
         local item = nextitem()
         if item == nil then
@@ -145,8 +147,8 @@ local function map(func, items)
     end
 end
 
-local function reduce(func, items, init)
-    local nextitem = iter(items)
+local function reduce(func, iterable, init)
+    local nextitem = iter(iterable)
     local result = init
     if result == nil then
         result = nextitem()
@@ -160,8 +162,8 @@ local function reduce(func, items, init)
     return result
 end
 
-local function none(items)
-    local nextitem = iter(items)
+local function none(iterable)
+    local nextitem = iter(iterable)
     for item in nextitem do
         if item then
             return false
@@ -202,8 +204,8 @@ local function split(str, pattern, plain)
 end
 
 local function zip(items1, items2)
-    local nextitem1 = iterate(items1)
-    local nextitem2 = iterate(items2)
+    local nextitem1 = iter(items1)
+    local nextitem2 = iter(items2)
     return function()
         local item1 = nextitem1()
         local item2 = nextitem2()
@@ -215,12 +217,12 @@ local function zip(items1, items2)
     end
 end
 
-local function sum(items)
-    return reduce(add, items, 0)
+local function sum(iterable)
+    return reduce(add, iterable, 0)
 end
 
-local function product(items)
-    return reduce(mul, items, 1)
+local function product(iterable)
+    return reduce(mul, iterable, 1)
 end
 
 return {
@@ -242,6 +244,6 @@ return {
     split = split,
     sub = sub,
     sum = sum,
-    toarray = toarray,
+    to_array = to_array,
     zip = zip,
 }

@@ -1,10 +1,10 @@
-local util = require "util"
+local mimic = require "mimic"
 
-local map = util.map
-local split = util.split
-local toarray = util.toarray
+local map = mimic.map
+local split = mimic.split
+local to_array = mimic.to_array
 
-local levelmap = [[
+local level_map = [[
 ###############################################################################
 #                                                                             #
 #                                                                             #
@@ -29,8 +29,8 @@ local levelmap = [[
 ###############################################################################
 ]]
 
-function newlevel()
+function new_level()
     local level = {}
-    level.grid = toarray(map(toarray, split(levelmap, "\n")))
+    level.grid = to_array(map(to_array, split(level_map, "\n")))
     return level
 end
