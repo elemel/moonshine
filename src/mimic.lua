@@ -1,48 +1,7 @@
-local function add(value1, value2)
-    return value1 + value2
-end
-
-local function sub(value1, value2)
-    return value1 - value2
-end
-
-local function mul(value1, value2)
-    return value1 * value2
-end
-
-local function div(value1, value2)
-    return value1 / value2
-end
-
-local function neg(value)
-    return -value
-end
-
-local function chars(str)
-    local index = 0
-    local length = #str
-    return function()
-        index = index + 1
-        if index <= length then
-            return string.sub(str, index, index)
-        else
-            return nil
-        end
-    end
-end
-
-local function keys(tab)
+local function values(t)
     local key, value = nil, nil
     return function()
-        key, value = next(tab, key)
-        return key
-    end
-end
-
-local function values(tab)
-    local key, value = nil, nil
-    return function()
-        key, value = next(tab, key)
+        key, value = next(t, key)
         return value
     end
 end
@@ -53,51 +12,113 @@ local function iter(iterable)
     elseif type(iterable) == "string" then
         return chars(iterable)
     elseif type(iterable) == "table" then
-        return values(iterable)
+        local iter_func = iterable["__iter"]
+        if iter_func ~= nil then
+            return iter_func(iterable)
+        else
+            return values(iterable)
+        end
     else
         error("argument is not iterable")
     end
 end
 
-local function all(items)
-    local nextitem = iter(items)
-    for item in nextitem do
-        if not item then
+local function reduce(iterable, func, init)
+    local next_item = iter(iterable)
+    local result = init
+    if result == nil then
+        result = next_item()
+        if result == nil then
+            return nil
+        end
+    end
+    for item in next_item do
+        result = func(result, item)
+    end
+    return result
+end
+
+local function identity(...)
+    return ...
+end
+
+local function add(left, right)
+    return left + right
+end
+
+local function all(iterable, pred)
+    pred = pred or identity
+    local next_item = iter(iterable)
+    for item in next_item do
+        if not pred(item) then
             return false
         end
     end
     return true
 end
 
-local function any(items)
-    local nextitem = iter(items)
-    for item in nextitem do
-        if item then
+local function any(iterable, pred)
+    pred = pred or identity
+    local next_item = iter(iterable)
+    for item in next_item do
+        if pred(item) then
             return true
         end
     end
     return false
 end
 
-local function equal(tab1, tab2)
-    for key, value in pairs(tab1) do
-        if value ~= tab2[key] then
-            return false
-        end
+local function array(iterable)
+    local result = {}
+    for item in iter(iterable) do
+        table.insert(result, item)
     end
-    for key, value in pairs(tab2) do
-        if value ~= tab1[key] then
-            return false
-        end
-    end
-    return true
+    return result
 end
 
-local function enum(items)
-    local nextitem = iter(items)
+local function blank(value)
+    if type(value) == "nil" then
+        return true
+    elseif type(value) == "boolean" then
+        return value == false
+    elseif type(value) == "number" then
+        return value == 0
+    elseif type(value) == "string" then
+        return value == ""
+    elseif type(value) == "table" then
+        local blank_func = value["__blank"]
+        if blank_func ~= nil then
+            return blank_func(value)
+        else
+            return next(value) == nil
+        end
+    else
+        return false
+    end
+end
+
+local function chars(s)
     local index = 0
+    local length = #s
     return function()
-        item = nextitem()
+        index = index + 1
+        if index <= length then
+            return string.sub(s, index, index)
+        else
+            return nil
+        end
+    end
+end
+
+local function div(left, right)
+    return left / right
+end
+
+local function enum(iterable)
+    local index = 0
+    local next_item = iter(iterable)
+    return function()
+        item = next_item()
         if item ~= nil then
             index = index + 1
             return index, item
@@ -107,26 +128,24 @@ local function enum(items)
     end
 end
 
-local function to_array(items)
-    local result = {}
-    for index, item in enum(items) do
-        result[index] = item
+local function equal(tab_1, tab_2)
+    for key, value in pairs(tab_1) do
+        if value ~= tab_2[key] then
+            return false
+        end
     end
-    return result
+    for key, value in pairs(tab_2) do
+        if value ~= tab_1[key] then
+            return false
+        end
+    end
+    return true
 end
 
-local function dict(kvpairs)
-    local result = {}
-    for key, value in iter(kvpairs) do
-        result[key] = value
-    end
-    return result
-end
-
-local function filter(pred, iterable)
-    local nextitem = iter(iterable)
+local function filter(iterable, pred)
+    local next_item = iter(iterable)
     return function()
-        local item = nextitem()
+        local item = next_item()
         if item ~= nil and pred(item) then
             return item
         else
@@ -135,10 +154,26 @@ local function filter(pred, iterable)
     end
 end
 
-local function map(func, iterable)
-    local nextitem = iter(iterable)
+local function items(t)
+    local key, value = nil, nil
     return function()
-        local item = nextitem()
+        key, value = next(t, key)
+        return key, value
+    end
+end
+
+local function keys(t)
+    local key, value = nil, nil
+    return function()
+        key, value = next(t, key)
+        return key
+    end
+end
+
+local function map(iterable, func)
+    local next_item = iter(iterable)
+    return function()
+        local item = next_item()
         if item == nil then
             return nil
         else
@@ -147,29 +182,16 @@ local function map(func, iterable)
     end
 end
 
-local function reduce(func, iterable, init)
-    local nextitem = iter(iterable)
-    local result = init
-    if result == nil then
-        result = nextitem()
-        if result == nil then
-            return nil
-        end
-    end
-    for item in nextitem do
-        result = func(result, item)
-    end
-    return result
+local function mul(left, right)
+    return left * right
 end
 
-local function none(iterable)
-    local nextitem = iter(iterable)
-    for item in nextitem do
-        if item then
-            return false
-        end
-    end
-    return true
+local function neg(n)
+    return -n
+end
+
+local function product(iterable)
+    return reduce(iterable, mul, 1)
 end
 
 local function range(first, last, step)
@@ -187,63 +209,109 @@ local function range(first, last, step)
     end
 end
 
-local function split(str, pattern, plain)
+local function repr(value)
+    if type(value) == "string" then
+        return "\"" .. string.gsub(value, "\"", "\\\"") .. "\""
+    elseif type(value) == "table" then
+        return "{}"
+    else
+        return tostring(value)
+    end
+end
+
+local function set(iterable)
+    local result = {}
+    for item in iter(iterable) do
+        result[item] = true
+    end
+    return result
+end
+
+local function split(s, pattern, plain)
     local first, last = 1, 0
-    local length = #str
+    local length = #s
     return function()
         if first > length then
             return nil
         end
         local init = last + 1
-        first, last = string.find(str, pattern, init, plain)
+        first, last = string.find(s, pattern, init, plain)
         if first == nil then
             first, last = length + 1, length
         end
-        return string.sub(str, init, first - 1)
+        return string.sub(s, init, first - 1)
     end
 end
 
-local function zip(items1, items2)
-    local nextitem1 = iter(items1)
-    local nextitem2 = iter(items2)
+local function sub(left, right)
+    return left - right
+end
+
+function sum(iterable)
+    return reduce(iterable, add, 0)
+end
+
+local function tab(iterable)
+    local result = {}
+    for key, value in iter(iterable) do
+        result[key] = value
+    end
+    return result
+end
+
+local function zip_all(iterable_1, iterable_2)
+    local next_item_1 = iter(iterable_1)
+    local next_item_2 = iter(iterable_2)
     return function()
-        local item1 = nextitem1()
-        local item2 = nextitem2()
-        if item1 ~= nil or item2 ~= nil then
-            return {item1, item2}
+        local item1 = next_item_1()
+        local item2 = next_item_2()
+        if item_1 ~= nil and item_2 ~= nil then
+            return item_1, item_2
         else
             return nil
         end
     end
 end
 
-local function sum(iterable)
-    return reduce(add, iterable, 0)
-end
-
-local function product(iterable)
-    return reduce(mul, iterable, 1)
+local function zip_any(iterable_1, iterable_2)
+    local next_item_1 = iter(iterable_1)
+    local next_item_2 = iter(iterable_2)
+    return function()
+        local item1 = next_item_1()
+        local item2 = next_item_2()
+        if item_1 ~= nil or item_2 ~= nil then
+            return item_1, item_2
+        else
+            return nil
+        end
+    end
 end
 
 return {
     add = add,
     all = all,
     any = any,
+    array = array,
+    blank = blank,
     chars = chars,
     div = div,
     enum = enum,
     equal = equal,
     filter = filter,
+    identity = identity,
+    items = items,
     iter = iter,
-    map = map,
+    keys = keys,
     mul = mul,
-    none = none,
+    neg = neg,
     product = product,
     range = range,
-    reduce = reduce,
+    repr = repr,
+    set = set,
     split = split,
     sub = sub,
     sum = sum,
-    to_array = to_array,
-    zip = zip,
+    values = values,
+    zip_all = zip_all,
+    zip_any = zip_any,
 }
