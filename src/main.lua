@@ -22,7 +22,6 @@
 -- OTHER DEALINGS IN THE SOFTWARE.
 
 local curses = require "curses"
-
 local Game = require "Game"
 
 directions = {
