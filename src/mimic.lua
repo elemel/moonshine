@@ -1,3 +1,16 @@
+local function chars(s)
+    local index = 0
+    local length = #s
+    return function()
+        index = index + 1
+        if index <= length then
+            return string.sub(s, index, index)
+        else
+            return nil
+        end
+    end
+end
+
 local function values(t)
     local key, value = nil, nil
     return function()
@@ -94,19 +107,6 @@ local function blank(value)
         end
     else
         return false
-    end
-end
-
-local function chars(s)
-    local index = 0
-    local length = #s
-    return function()
-        index = index + 1
-        if index <= length then
-            return string.sub(s, index, index)
-        else
-            return nil
-        end
     end
 end
 
@@ -302,6 +302,7 @@ return {
     items = items,
     iter = iter,
     keys = keys,
+    map = map,
     mul = mul,
     neg = neg,
     product = product,
