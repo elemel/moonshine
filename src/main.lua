@@ -21,7 +21,7 @@
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
 
-require "curses"
+local curses = require "curses"
 
 local Game = require "Game"
 
@@ -69,13 +69,13 @@ function protected_main(win)
             _, key_char = pcall(string.char, key_code)
             if key_char == "q" or key_char == "Q" then
                 break
-            elseif key_code == KEY_UP then
+            elseif key_code == curses.KEY_UP then
                 game.hero.pos.y = game.hero.pos.y - 1
-            elseif key_code == KEY_LEFT then
+            elseif key_code == curses.KEY_LEFT then
                 game.hero.pos.x = game.hero.pos.x - 1
-            elseif key_code == KEY_RIGHT then
+            elseif key_code == curses.KEY_RIGHT then
                 game.hero.pos.x = game.hero.pos.x + 1
-            elseif key_code == KEY_DOWN then
+            elseif key_code == curses.KEY_DOWN then
                 game.hero.pos.y = game.hero.pos.y + 1
             end
         end

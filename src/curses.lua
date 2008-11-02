@@ -22,28 +22,46 @@
 -- OTHER DEALINGS IN THE SOFTWARE.
 
 pcall(require, "luarocks.require")
-require "alien"
-require "alien.struct"
+local alien = require "alien"
 
-curses = alien.curses
-curses.addch:types("int", "long")
-curses.addstr:types("int", "string")
-curses.cbreak:types("int")
-curses.echo:types("int")
-curses.endwin:types("int")
-curses.halfdelay:types("int", "int")
-curses.initscr:types("pointer")
-curses.insch:types("int", "long")
-curses.keypad:types("int", "pointer", "int")
-curses.move:types("int", "int", "int")
-curses.nocbreak:types("int")
-curses.noecho:types("int")
-curses.notimeout:types("int", "pointer", "int")
-curses.timeout:types("void", "int")
-curses.wgetch:types("int", "pointer")
+local funcs = {
+    addch = {"int", "long"},
+    addstr = {"int", "string"},
+    cbreak = {"int"},
+    echo = {"int"},
+    endwin = {"int"},
+    halfdelay = {"int", "int"},
+    initscr = {"pointer"},
+    insch = {"int", "long"},
+    keypad = {"int", "pointer", "int"},
+    move = {"int", "int", "int"},
+    nocbreak = {"int"},
+    noecho = {"int"},
+    notimeout = {"int", "pointer", "int"},
+    timeout = {"void", "int"},
+    wgetch = {"int", "pointer"},
+}
 
-KEY_DOWN = 258
-KEY_UP = 259
-KEY_LEFT = 260
-KEY_RIGHT = 261
+local curses = {
+    COLOR_BLACK = 0,
+    COLOR_RED = 1,
+    COLOR_GREEN = 2,
+    COLOR_YELLOW = 3,
+    COLOR_BLUE = 4,
+    COLOR_MAGENTA = 5,
+    COLOR_CYAN = 6,
+    COLOR_WHITE = 7,
 
+    KEY_DOWN = 258,
+    KEY_UP = 259,
+    KEY_LEFT = 260,
+    KEY_RIGHT = 261,
+}
+
+for name, types in pairs(funcs) do
+    local func = alien.curses[name]
+    func:types(unpack(types))
+    curses[name] = func
+end
+
+return curses
