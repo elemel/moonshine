@@ -21,14 +21,42 @@
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
 
-local heap = require("heap")()
-require "level"
+-- Inefficient heap implementation. To be replace with a more efficient
+-- implementation later.
 
-function new_game()
-    local game = {}
-    game.level = new_level()
-    game.hero = {pos = {y = 10, x = 10}}
-    game.queue = heap.new()
-    return game
+local Heap = {}
+
+function Heap.new(before)
+    self = {__before = before}
+    setmetatable(self, {__index = Heap})
+    return self
 end
+
+function Heap:push(value)
+    table.insert(self, value)
+end
+
+function Heap:pop()
+    if #self == 0 then
+        return nil
+    end
+    self:norm()
+    result = self[1]
+    self[1] = table.remove(self)
+    return result
+end
+
+function Heap:peek()
+    if #self == 0 then
+        return nil
+    end
+    self:norm()
+    return self[1]
+end
+
+function Heap:norm()
+    table.sort(self, self.__before)
+end
+
+return Heap
 

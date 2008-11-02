@@ -21,14 +21,19 @@
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
 
-local heap = require("heap")()
-require "level"
+local Heap = require "Heap"
 
-function new_game()
-    local game = {}
-    game.level = new_level()
-    game.hero = {pos = {y = 10, x = 10}}
-    game.queue = heap.new()
-    return game
+local function test()
+    h = Heap.new()
+    h:push("b")
+    h:push("c")
+    h:push("a")
+    assert(#h == 3)
+    assert(h:peek() == "a")
+    assert(#h == 3)
+    assert(h:pop() == "a")
+    assert(#h == 2)
+    assert(h:peek() == "b")
 end
 
+test()
