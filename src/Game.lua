@@ -22,13 +22,18 @@
 -- OTHER DEALINGS IN THE SOFTWARE.
 
 local Heap = require "Heap"
-require "level"
+local Level = require "Level"
 
-function new_game()
+local Game = {}
+
+function Game:new()
     local game = {}
-    game.level = new_level()
+    setmetatable(game, self)
+    self.__index = self
+    game.level = Level:new()
     game.hero = {pos = {y = 10, x = 10}}
-    game.queue = Heap.new(function(a, b) return a.time < b.time end)
+    game.queue = Heap:new(function(a, b) return a.time < b.time end)
     return game
 end
 
+return Game

@@ -48,8 +48,14 @@ local level_map = [[
 ###############################################################################
 ]]
 
-function new_level()
+local Level = {}
+
+function Level:new()
     local level = {}
+    setmetatable(level, self)
+    self.__index = self
     level.grid = mimic.array(mimic.map(mimic.split(level_map, "\n"), mimic.array))
     return level
 end
+
+return Level

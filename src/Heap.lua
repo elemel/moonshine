@@ -26,10 +26,11 @@
 
 local Heap = {}
 
-function Heap.new(before)
-    self = {__before = before}
-    setmetatable(self, {__index = Heap})
-    return self
+function Heap:new(before)
+    local heap = {__before = before}
+    setmetatable(heap, self)
+    self.__index = self
+    return heap
 end
 
 function Heap:push(value)
@@ -41,7 +42,7 @@ function Heap:pop()
         return nil
     end
     self:norm()
-    result = self[1]
+    local result = self[1]
     self[1] = table.remove(self)
     return result
 end

@@ -22,7 +22,8 @@
 -- OTHER DEALINGS IN THE SOFTWARE.
 
 require "curses"
-require "game"
+
+local Game = require "Game"
 
 directions = {
     northwest = {-1, -1},
@@ -59,7 +60,7 @@ function protected_main(win)
     curses.cbreak()
     curses.keypad(win, 1)
     curses.noecho()
-    game = new_game()
+    game = Game:new()
     while true do
         update_screen(win, game)
         key_code = curses.wgetch(win)
