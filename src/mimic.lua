@@ -1,4 +1,8 @@
-local function chars(s)
+local function identity(...)
+    return ...
+end
+
+local function iter_str(s)
     local index = 0
     local length = #s
     return function()
@@ -23,7 +27,7 @@ local function iter(iterable)
     if type(iterable) == "function" then
         return iterable
     elseif type(iterable) == "string" then
-        return chars(iterable)
+        return iter_str(iterable)
     elseif type(iterable) == "table" then
         local iter_func = iterable["__iter"]
         if iter_func ~= nil then
@@ -49,10 +53,6 @@ local function reduce(iterable, func, init)
         result = func(result, item)
     end
     return result
-end
-
-local function identity(...)
-    return ...
 end
 
 local function add(left, right)
@@ -124,7 +124,7 @@ local function enum(iterable)
     end
 end
 
-local function equal(tab_1, tab_2)
+local function equiv(tab_1, tab_2)
     for key, value in pairs(tab_1) do
         if value ~= tab_2[key] then
             return false
@@ -205,7 +205,18 @@ local function repr(value)
     if type(value) == "string" then
         return "\"" .. string.gsub(value, "\"", "\\\"") .. "\""
     elseif type(value) == "table" then
-        return "{}"
+        result = "{"
+        first = true
+        for key, value in pairs(value) do
+            if first then
+                first = false
+            else
+                result = result .. ", "
+            end
+            result = result .. "[" .. repr(key) .. "]" .. " = " .. repr(value)
+        end
+        result = result .. "}"
+        return result
     else
         return tostring(value)
     end
@@ -220,6 +231,7 @@ local function set(iterable)
 end
 
 local function split(s, pattern, plain)
+    pattern = pattern or "[ \t\r\n]+"
     local first, last = 1, 0
     local length = #s
     return function()
@@ -280,11 +292,9 @@ return {
     any = any,
     array = array,
     blank = blank,
-    chars = chars,
     enum = enum,
-    equal = equal,
+    equiv = equiv,
     filter = filter,
-    identity = identity,
     items = items,
     iter = iter,
     keys = keys,

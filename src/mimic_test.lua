@@ -4,12 +4,12 @@ local function assert_false(value)
     assert(not value)
 end
 
-local function assert_equal(value1, value2)
-    assert(mimic.equal(value1, value2))
+local function assert_equiv(value1, value2)
+    assert(mimic.equiv(value1, value2))
 end
 
-local function assert_not_equal(value1, value2)
-    assert(not mimic.equal(value1, value2))
+local function assert_not_equiv(value1, value2)
+    assert(not mimic.equiv(value1, value2))
 end
 
 local function test_all()
@@ -35,7 +35,8 @@ local function test_any()
 end
 
 local function test_array()
-    assert_equal(mimic.array(mimic.range(1, 3)), {1, 2, 3})
+    assert_equiv(mimic.array(mimic.range(1, 3)), {1, 2, 3})
+    assert_equiv(mimic.array("Lua"), {"L", "u", "a"})
 end
 
 local function test_blank()
@@ -52,22 +53,18 @@ local function test_blank()
     assert_false(mimic.blank({a = 1}))
 end
 
-function test_chars()
-    assert_equal(mimic.array(mimic.chars('Lua')), {'L', 'u', 'a'})
+local function test_equiv()
+    assert_equiv({1, 2, 3}, {1, 2, 3})
+    assert_not_equiv({1, 2, 3}, {1, 2, 4})
+    assert_not_equiv({1, 2, 3, 4}, {1, 2, 3})
+    assert_not_equiv({1, 2, 3}, {1, 2, 3, 4})
 end
 
-function test_equal()
-    assert_equal({1, 2, 3}, {1, 2, 3})
-    assert_not_equal({1, 2, 3}, {1, 2, 4})
-    assert_not_equal({1, 2, 3, 4}, {1, 2, 3})
-    assert_not_equal({1, 2, 3}, {1, 2, 3, 4})
-end
-
-function test_product()
+local function test_product()
     assert(mimic.product({1, 2, 3, 4, 5, 6}) == 720)
 end
 
-function test_range()
+local function test_range()
     i = mimic.range()
     assert(i() == 1)
     assert(i() == 2)
@@ -80,19 +77,28 @@ function test_range()
     assert(i() == nil)
 end
 
-function test_repr()
+local function test_repr()
     assert(mimic.repr(nil) == "nil")
     assert(mimic.repr(false) == "false")
     assert(mimic.repr(true) == "true")
     assert(mimic.repr(0) == "0")
     assert(mimic.repr(123456789) == "123456789")
     assert(mimic.repr("") == "\"\"")
-    assert(mimic.repr("foo") == "\"foo\"")
+    assert(mimic.repr("a") == "\"a\"")
     assert(mimic.repr("\"") == "\"\\\"\"")
     assert(mimic.repr({}) == "{}")
+    assert(mimic.repr({13}) == "{[1] = 13}")
+    assert(mimic.repr({a = 13}) == "{[\"a\"] = 13}")
+    assert(mimic.repr({"a", "b", "c"}) ==
+                      "{[1] = \"a\", [2] = \"b\", [3] = \"c\"}")
 end
 
-function test_sum()
+local function test_split()
+    assert_equiv(mimic.array(mimic.split("The Dude abides.")),
+                 {"The", "Dude", "abides."})
+end
+
+local function test_sum()
     assert(mimic.sum({1, 2, 3, 4, 5, 6}) == 21)
 end
 
@@ -101,11 +107,11 @@ local function test()
     test_any()
     test_array()
     test_blank()
-    test_chars()
-    test_equal()
+    test_equiv()
     test_product()
     test_range()
     test_repr()
+    test_split()
     test_sum()
 end
 
