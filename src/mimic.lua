@@ -110,10 +110,6 @@ local function blank(value)
     end
 end
 
-local function div(left, right)
-    return left / right
-end
-
 local function enum(iterable)
     local index = 0
     local next_item = iter(iterable)
@@ -186,10 +182,6 @@ local function mul(left, right)
     return left * right
 end
 
-local function neg(n)
-    return -n
-end
-
 local function product(iterable)
     return reduce(iterable, mul, 1)
 end
@@ -243,10 +235,6 @@ local function split(s, pattern, plain)
     end
 end
 
-local function sub(left, right)
-    return left - right
-end
-
 function sum(iterable)
     return reduce(iterable, add, 0)
 end
@@ -288,13 +276,11 @@ local function zip_any(iterable_1, iterable_2)
 end
 
 return {
-    add = add,
     all = all,
     any = any,
     array = array,
     blank = blank,
     chars = chars,
-    div = div,
     enum = enum,
     equal = equal,
     filter = filter,
@@ -303,14 +289,11 @@ return {
     iter = iter,
     keys = keys,
     map = map,
-    mul = mul,
-    neg = neg,
     product = product,
     range = range,
     repr = repr,
     set = set,
     split = split,
-    sub = sub,
     sum = sum,
     values = values,
     zip_all = zip_all,
