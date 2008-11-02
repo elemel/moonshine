@@ -24,6 +24,7 @@
 pcall(require, "luarocks.require")
 local alien = require "alien"
 
+-- Function prototypes.
 local funcs = {
     addch = {"int", "long"},
     addstr = {"int", "string"},
@@ -42,22 +43,14 @@ local funcs = {
     wgetch = {"int", "pointer"},
 }
 
-local curses = {
-    COLOR_BLACK = 0,
-    COLOR_RED = 1,
-    COLOR_GREEN = 2,
-    COLOR_YELLOW = 3,
-    COLOR_BLUE = 4,
-    COLOR_MAGENTA = 5,
-    COLOR_CYAN = 6,
-    COLOR_WHITE = 7,
+-- Load constants from file into module.
+local saved_env = getfenv(0)
+local curses = {}
+setfenv(0, curses)
+dofile "curses_constants.lua"
+setfenv(0, saved_env)
 
-    KEY_DOWN = 258,
-    KEY_UP = 259,
-    KEY_LEFT = 260,
-    KEY_RIGHT = 261,
-}
-
+-- Add functions to module.
 for name, types in pairs(funcs) do
     local func = alien.curses[name]
     func:types(unpack(types))
