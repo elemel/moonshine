@@ -31,8 +31,9 @@ function Game:new()
     setmetatable(game, self)
     self.__index = self
     game.level = Level:new()
-    game.hero = {pos = {y = 10, x = 10}}
+    game.hero = {pos = {y = 10, x = 10}, time = 1}
     game.queue = Heap:new(function(a, b) return a.time < b.time end)
+    game.queue:push(game.hero)
     return game
 end
 

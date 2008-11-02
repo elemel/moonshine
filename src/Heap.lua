@@ -21,7 +21,7 @@
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
 
--- Inefficient heap implementation. To be replace with a more efficient
+-- Inefficient heap implementation. To be replaced with a more efficient
 -- implementation later.
 
 local Heap = {}

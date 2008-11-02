@@ -62,20 +62,25 @@ function protected_main(win)
     curses.noecho()
     game = Game:new()
     while true do
-        update_screen(win, game)
-        key_code = curses.wgetch(win)
-        _, key_char = pcall(string.char, key_code)
-        if key_char == "q" or key_char == "Q" then
-            break
-        elseif key_code == KEY_UP then
-            game.hero.pos.y = game.hero.pos.y - 1
-        elseif key_code == KEY_LEFT then
-            game.hero.pos.x = game.hero.pos.x - 1
-        elseif key_code == KEY_RIGHT then
-            game.hero.pos.x = game.hero.pos.x + 1
-        elseif key_code == KEY_DOWN then
-            game.hero.pos.y = game.hero.pos.y + 1
+        thing = game.queue:pop()
+        if thing == game.hero then
+            update_screen(win, game)
+            key_code = curses.wgetch(win)
+            _, key_char = pcall(string.char, key_code)
+            if key_char == "q" or key_char == "Q" then
+                break
+            elseif key_code == KEY_UP then
+                game.hero.pos.y = game.hero.pos.y - 1
+            elseif key_code == KEY_LEFT then
+                game.hero.pos.x = game.hero.pos.x - 1
+            elseif key_code == KEY_RIGHT then
+                game.hero.pos.x = game.hero.pos.x + 1
+            elseif key_code == KEY_DOWN then
+                game.hero.pos.y = game.hero.pos.y + 1
+            end
         end
+        thing.time = thing.time + 1
+        game.queue:push(thing)
     end
 end
 
