@@ -24,22 +24,11 @@
 local curses = require "curses"
 local Game = require "Game"
 
-directions = {
-    northwest = {-1, -1},
-    north = {-1, 0},
-    northeast = {-1, 1},
-    west = {0, -1},
-    east = {0, 1},
-    southwest = {1, -1},
-    south = {1, 0},
-    southeast = {1, 1},
-}
-
-function to_screen_pos(y, x)
+local function to_screen_pos(y, x)
     return y, x - 1
 end
 
-function update_screen(win, game)
+local function update_screen(win, game)
     local grid = game.level.grid
     local height, width = #grid, #grid[1]
     for game_y = 1, height do
@@ -50,12 +39,23 @@ function update_screen(win, game)
         end
     end
     screen_y, screen_x = to_screen_pos(game.hero.pos.y, game.hero.pos.x)
-    curses.move(screen_y, screen_x - 1)
+    curses.move(screen_y, screen_x)
     curses.addstr("@")
-    curses.move(screen_y, screen_x - 1)
+    curses.move(screen_y, screen_x)
 end
 
-function protected_main(win)
+local function move_hero(game, dy, dx)
+    local grid = game.level.grid
+    local height, width = #grid, #grid[1]
+    local new_y, new_x = game.hero.pos.y + dy, game.hero.pos.x + dx
+    if new_y >= 1 and new_y <= height and new_x >= 1 and new_x <= width and
+       grid[new_y][new_x].feature.passable then
+       game.hero.pos.y = new_y
+       game.hero.pos.x = new_x
+    end
+end
+
+local function protected_main(win)
     curses.cbreak()
     curses.keypad(win, 1)
     curses.noecho()
@@ -69,13 +69,13 @@ function protected_main(win)
             if key_char == "q" or key_char == "Q" then
                 break
             elseif key_code == curses.KEY_UP then
-                game.hero.pos.y = game.hero.pos.y - 1
+                move_hero(game, -1, 0)
             elseif key_code == curses.KEY_LEFT then
-                game.hero.pos.x = game.hero.pos.x - 1
+                move_hero(game, 0, -1)
             elseif key_code == curses.KEY_RIGHT then
-                game.hero.pos.x = game.hero.pos.x + 1
+                move_hero(game, 0, 1)
             elseif key_code == curses.KEY_DOWN then
-                game.hero.pos.y = game.hero.pos.y + 1
+                move_hero(game, 1, 0)
             end
         end
         thing.time = thing.time + 1
@@ -83,7 +83,7 @@ function protected_main(win)
     end
 end
 
-function main()
+local function main()
     win = curses.initscr()
     status, result = pcall(protected_main, win)
     curses.endwin()

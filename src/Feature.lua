@@ -1,5 +1,6 @@
 local Feature = {
     char = " ",
+    climbable = false,
     passable = true,
 }
 

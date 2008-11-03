@@ -13,10 +13,14 @@ features.Floor = Feature:new({
 
 features.StairDown = Feature:new({
     char = ">",
+    climbable = true,
+    direction = "down",
 })
 
 features.StairUp = Feature:new({
     char = "<",
+    climbable = true,
+    direction = "up",
 })
 
 return features
