@@ -68,14 +68,22 @@ local function protected_main(win)
             _, key_char = pcall(string.char, key_code)
             if key_char == "q" or key_char == "Q" then
                 break
-            elseif key_code == curses.KEY_UP then
+            elseif key_code == curses.KEY_UP or key_char == "8" then
                 move_hero(game, -1, 0)
-            elseif key_code == curses.KEY_LEFT then
+            elseif key_code == curses.KEY_LEFT or key_char == "4" then
                 move_hero(game, 0, -1)
-            elseif key_code == curses.KEY_RIGHT then
+            elseif key_code == curses.KEY_RIGHT or key_char == "6" then
                 move_hero(game, 0, 1)
-            elseif key_code == curses.KEY_DOWN then
+            elseif key_code == curses.KEY_DOWN or key_char == "2" then
                 move_hero(game, 1, 0)
+            elseif key_char == "7" then
+                move_hero(game, -1, -1)
+            elseif key_char == "9" then
+                move_hero(game, -1, 1)
+            elseif key_char == "1" then
+                move_hero(game, 1, -1)
+            elseif key_char == "3" then
+                move_hero(game, 1, 1)
             end
         end
         thing.time = thing.time + 1
