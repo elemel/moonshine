@@ -22,6 +22,7 @@
 -- OTHER DEALINGS IN THE SOFTWARE.
 
 local mimic = require "mimic"
+local Tile = require "Tile"
 
 local level_map = [[
 ###############################################################################
@@ -50,11 +51,30 @@ local level_map = [[
 
 local Level = {}
 
+local function parse_tile(char)
+    return Tile:new(char)
+end
+
+local function parse_line(line)
+    return mimic.array(mimic.map(line, parse_tile))
+end
+
+local function not_blank(value)
+    return not mimic.blank(value)
+end
+
+local function parse_map(map)
+    local lines = mimic.split(map, "\n")
+    lines = mimic.filter(lines, not_blank)
+    lines = mimic.map(lines, parse_line)
+    return mimic.array(lines)
+end
+
 function Level:new()
     local level = {}
     setmetatable(level, self)
     self.__index = self
-    level.grid = mimic.array(mimic.map(mimic.split(level_map, "\n"), mimic.array))
+    level.grid = parse_map(level_map)
     return level
 end
 

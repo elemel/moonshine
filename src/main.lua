@@ -46,7 +46,7 @@ function update_screen(win, game)
         for game_x = 1, width do
             screen_y, screen_x = to_screen_pos(game_y, game_x)
             curses.move(screen_y, screen_x)
-            curses.addstr(grid[game_y][game_x])
+            curses.addstr(grid[game_y][game_x].feature)
         end
     end
     screen_y, screen_x = to_screen_pos(game.hero.pos.y, game.hero.pos.x)
