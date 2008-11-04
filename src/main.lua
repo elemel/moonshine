@@ -33,12 +33,12 @@ local function update_screen(win, game)
     local height, width = #grid, #grid[1]
     for game_y = 1, height do
         for game_x = 1, width do
-            screen_y, screen_x = to_screen_pos(game_y, game_x)
+            local screen_y, screen_x = to_screen_pos(game_y, game_x)
             curses.move(screen_y, screen_x)
             curses.addstr(grid[game_y][game_x].feature.char)
         end
     end
-    screen_y, screen_x = to_screen_pos(game.hero.y, game.hero.x)
+    local screen_y, screen_x = to_screen_pos(game.hero.y, game.hero.x)
     curses.move(screen_y, screen_x)
     curses.addstr("@")
     curses.move(screen_y, screen_x)
@@ -59,13 +59,13 @@ local function protected_main(win)
     curses.cbreak()
     curses.keypad(win, 1)
     curses.noecho()
-    game = Game:new()
+    local game = Game:new()
     while true do
-        thing = game.queue:pop()
+        local thing = game.queue:pop()
         if thing == game.hero then
             update_screen(win, game)
-            key_code = curses.wgetch(win)
-            _, key_char = pcall(string.char, key_code)
+            local key_code = curses.wgetch(win)
+            local _, key_char = pcall(string.char, key_code)
             if key_char == "q" or key_char == "Q" then
                 break
             elseif key_code == curses.KEY_UP or key_char == "8" then
@@ -92,8 +92,8 @@ local function protected_main(win)
 end
 
 local function main()
-    win = curses.initscr()
-    status, result = pcall(protected_main, win)
+    local win = curses.initscr()
+    local status, result = pcall(protected_main, win)
     curses.endwin()
     if not status then
         error(result)
