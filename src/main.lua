@@ -38,7 +38,7 @@ local function update_screen(win, game)
             curses.addstr(grid[game_y][game_x].feature.char)
         end
     end
-    screen_y, screen_x = to_screen_pos(game.hero.pos.y, game.hero.pos.x)
+    screen_y, screen_x = to_screen_pos(game.hero.y, game.hero.x)
     curses.move(screen_y, screen_x)
     curses.addstr("@")
     curses.move(screen_y, screen_x)
@@ -47,11 +47,11 @@ end
 local function move_hero(game, dy, dx)
     local grid = game.level.grid
     local height, width = #grid, #grid[1]
-    local new_y, new_x = game.hero.pos.y + dy, game.hero.pos.x + dx
+    local new_y, new_x = game.hero.y + dy, game.hero.x + dx
     if new_y >= 1 and new_y <= height and new_x >= 1 and new_x <= width and
        grid[new_y][new_x].feature.passable then
-       game.hero.pos.y = new_y
-       game.hero.pos.x = new_x
+       game.hero.y = new_y
+       game.hero.x = new_x
     end
 end
 
