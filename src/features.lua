@@ -1,6 +1,17 @@
-local Feature = require "Feature"
+local Feature = {
+    char = " ",
+    climbable = false,
+    passable = true,
+}
 
-local features = {}
+function Feature:new(feature)
+    feature = feature or {}
+    setmetatable(feature, self)
+    self.__index = self
+    return feature
+end
+
+local features = {Feature = Feature}
 
 features.Wall = Feature:new({
     char = "#",
