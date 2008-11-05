@@ -33,10 +33,18 @@ function Game:new()
     setmetatable(game, self)
     self.__index = self
     game.level = Level:new()
-    game.hero = monsters.Monster:new({y = 10, x = 10, time = 1})
+
+    -- Create the hero.
+    game.hero = monsters.Elf:new({y = 10, x = 10, time = 1})
     move(game.hero, game.level.grid[game.hero.y][game.hero.x])
     game.queue = Heap:new(function(a, b) return a.time < b.time end)
     game.queue:push(game.hero)
+
+    move(monsters.Troll:new(), game.level.grid[15][65])
+    move(monsters.Goblin:new(), game.level.grid[14][63])
+    move(monsters.Goblin:new(), game.level.grid[15][60])
+    move(monsters.Goblin:new(), game.level.grid[17][62])
+    move(monsters.Goblin:new(), game.level.grid[15][66])
     return game
 end
 

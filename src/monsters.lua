@@ -30,6 +30,16 @@ function Monster:new(monster)
     return monster
 end
 
-local monsters = {Monster = Monster}
+local Elf = Monster:new({char = "e"})
+local Goblin = Monster:new({char = "g"})
+local Troll = Monster:new({char = "T"})
+
+local monsters = {
+    Monster = Monster,
+
+    Elf = Elf,
+    Goblin = Goblin,
+    Troll = Troll,
+}
 
 return monsters
