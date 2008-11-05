@@ -1,4 +1,4 @@
-local Monster = {}
+local Monster = {char = "@"}
 
 function Monster:new(monster)
     monster = monster or {}

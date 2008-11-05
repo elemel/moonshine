@@ -23,6 +23,7 @@
 
 local curses = require "curses"
 local Game = require "Game"
+local move = require "move"
 
 local function to_screen_pos(y, x)
     return y, x - 1
@@ -35,12 +36,11 @@ local function update_screen(win, game)
         for game_x = 1, width do
             local screen_y, screen_x = to_screen_pos(game_y, game_x)
             curses.move(screen_y, screen_x)
-            curses.addstr(grid[game_y][game_x].feature.char)
+            curses.addstr(grid[game_y][game_x].first_inv.char)
         end
     end
+
     local screen_y, screen_x = to_screen_pos(game.hero.y, game.hero.x)
-    curses.move(screen_y, screen_x)
-    curses.addstr("@")
     curses.move(screen_y, screen_x)
 end
 
@@ -49,9 +49,10 @@ local function move_hero(game, dy, dx)
     local height, width = #grid, #grid[1]
     local new_y, new_x = game.hero.y + dy, game.hero.x + dx
     if new_y >= 1 and new_y <= height and new_x >= 1 and new_x <= width and
-       grid[new_y][new_x].feature.passable then
+       grid[new_y][new_x].first_inv.prev_inv.passable then
        game.hero.y = new_y
        game.hero.x = new_x
+       move(game.hero, grid[new_y][new_x])
     end
 end
 

@@ -24,6 +24,7 @@
 local Heap = require "Heap"
 local Level = require "Level"
 local monsters = require "monsters"
+local move = require "move"
 
 local Game = {}
 
@@ -33,6 +34,7 @@ function Game:new()
     self.__index = self
     game.level = Level:new()
     game.hero = monsters.Monster:new({y = 10, x = 10, time = 1})
+    move(game.hero, game.level.grid[game.hero.y][game.hero.x])
     game.queue = Heap:new(function(a, b) return a.time < b.time end)
     game.queue:push(game.hero)
     return game

@@ -24,6 +24,7 @@
 local mimic = require "mimic"
 local Tile = require "Tile"
 local features = require "features"
+local move = require "move"
 
 local level_map = [[
 ###############################################################################
@@ -61,7 +62,9 @@ local char_to_feature = {
 
 local function parse_tile(char)
     local feature = char_to_feature[char]:new()
-    return Tile:new({feature = feature})
+    local tile = Tile:new()
+    move(feature, tile)
+    return tile
 end
 
 local function parse_line(line)
