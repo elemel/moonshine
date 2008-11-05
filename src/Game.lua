@@ -23,6 +23,7 @@
 
 local Heap = require "Heap"
 local Level = require "Level"
+local monsters = require "monsters"
 
 local Game = {}
 
@@ -31,7 +32,7 @@ function Game:new()
     setmetatable(game, self)
     self.__index = self
     game.level = Level:new()
-    game.hero = {y = 10, x = 10, time = 1}
+    game.hero = monsters.Monster:new({y = 10, x = 10, time = 1})
     game.queue = Heap:new(function(a, b) return a.time < b.time end)
     game.queue:push(game.hero)
     return game
