@@ -25,6 +25,7 @@ local Thing = {
     char = " ",
     count = 1,
     mobile = false,
+    passable = false,
     stackable = false,
 }
 
