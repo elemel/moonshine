@@ -21,38 +21,18 @@
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
 
-local Heap = require "Heap"
-local items = require "items"
-local Level = require "Level"
-local monsters = require "monsters"
-local move = require "move"
+local Thing = require "Thing"
 
-local Game = {}
+local Item = Thing:new({
+    mobile = true,
+    passable = true,
+})
 
-function Game:new()
-    local game = {}
-    setmetatable(game, self)
-    self.__index = self
-    game.level = Level:new()
+local items = {Item = Item}
 
-    -- Create the hero.
-    game.hero = monsters.Human:new({y = 10, x = 17, time = 1})
-    move(game.hero, game.level.grid[game.hero.y][game.hero.x])
-    game.queue = Heap:new(function(a, b) return a.time < b.time end)
-    game.queue:push(game.hero)
+items.Boulder = Item:new({
+    char = "0",
+    passable = false,
+})
 
-    -- Create some boulders.
-    move(items.Boulder:new(), game.level.grid[8][20])
-    move(items.Boulder:new(), game.level.grid[9][22])
-
-    -- Create some monsters.
-    move(monsters.Vampire:new(), game.level.grid[15][65])
-    move(monsters.Werewolf:new(), game.level.grid[14][63])
-    move(monsters.Zombie:new(), game.level.grid[15][60])
-    move(monsters.Zombie:new(), game.level.grid[17][62])
-    move(monsters.Zombie:new(), game.level.grid[15][66])
-
-    return game
-end
-
-return Game
+return items
