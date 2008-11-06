@@ -21,7 +21,7 @@
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
 
-local Monster = {char = "@"}
+local Monster = {char = "?"}
 
 function Monster:new(monster)
     monster = monster or {}
@@ -30,16 +30,18 @@ function Monster:new(monster)
     return monster
 end
 
-local Elf = Monster:new({char = "e"})
-local Goblin = Monster:new({char = "g"})
-local Troll = Monster:new({char = "T"})
+local Human = Monster:new({char = "@"})
+local Vampire = Monster:new({char = "V"})
+local Werewolf = Monster:new({char = "W"})
+local Zombie = Monster:new({char = "Z"})
 
 local monsters = {
     Monster = Monster,
 
-    Elf = Elf,
-    Goblin = Goblin,
-    Troll = Troll,
+    Human = Human,
+    Vampire = Vampire,
+    Werewolf = Werewolf,
+    Zombie = Zombie,
 }
 
 return monsters
