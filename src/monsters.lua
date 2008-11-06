@@ -21,14 +21,11 @@
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
 
-local Monster = {char = "?"}
+local Thing = require "Thing"
 
-function Monster:new(monster)
-    monster = monster or {}
-    setmetatable(monster, self)
-    self.__index = self
-    return monster
-end
+local Monster = Thing:new({
+    mobile = true,
+})
 
 local Human = Monster:new({char = "@"})
 local Vampire = Monster:new({char = "V"})

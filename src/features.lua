@@ -21,18 +21,12 @@
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
 
-local Feature = {
-    char = " ",
+local Thing = require "Thing"
+
+local Feature = Thing:new({
     climbable = false,
     passable = true,
-}
-
-function Feature:new(feature)
-    feature = feature or {}
-    setmetatable(feature, self)
-    self.__index = self
-    return feature
-end
+})
 
 local features = {Feature = Feature}
 
