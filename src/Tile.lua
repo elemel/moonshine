@@ -21,7 +21,7 @@
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
 
-local Tile = {}
+Tile = {}
 
 function Tile:new(tile)
     tile = tile or {}
@@ -29,6 +29,3 @@ function Tile:new(tile)
     self.__index = self
     return tile
 end
-
-return Tile
-

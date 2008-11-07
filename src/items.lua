@@ -21,18 +21,16 @@
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
 
-local Thing = require "Thing"
+local import = require("import")
+local Thing = import("Thing")
 
-local Item = Thing:new({
+Item = Thing.Thing:new({
     mobile = true,
     passable = true,
 })
 
-local items = {Item = Item}
-
-items.Boulder = Item:new({
+Boulder = Item:new({
     char = "0",
     passable = false,
 })
 
-return items

@@ -21,7 +21,7 @@
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
 
-local Thing = {
+Thing = {
     char = " ",
     count = 1,
     mobile = false,
@@ -36,4 +36,3 @@ function Thing:new(thing)
     return thing
 end
 
-return Thing

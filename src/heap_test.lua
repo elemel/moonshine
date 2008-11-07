@@ -21,19 +21,20 @@
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
 
-local Heap = require "Heap"
+local import = require("import")
+local Heap = import("Heap").Heap
 
 local function test()
-    h = Heap.new()
-    h:push("b")
-    h:push("c")
-    h:push("a")
-    assert(#h == 3)
-    assert(h:peek() == "a")
-    assert(#h == 3)
-    assert(h:pop() == "a")
-    assert(#h == 2)
-    assert(h:peek() == "b")
+    local heap = Heap:new()
+    heap:push("b")
+    heap:push("c")
+    heap:push("a")
+    assert(#heap == 3)
+    assert(heap:peek() == "a")
+    assert(#heap == 3)
+    assert(heap:pop() == "a")
+    assert(#heap == 2)
+    assert(heap:peek() == "b")
 end
 
 test()

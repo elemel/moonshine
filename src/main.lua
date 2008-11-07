@@ -21,9 +21,10 @@
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
 
-local curses = require "curses"
-local Game = require "Game"
-local move = require "move"
+local import = require("import")
+local curses = require("curses")
+local Game = import("Game").Game
+local move = import("move").move
 
 local function to_screen_pos(y, x)
     return y, x - 1

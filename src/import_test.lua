@@ -22,31 +22,14 @@
 -- OTHER DEALINGS IN THE SOFTWARE.
 
 local import = require("import")
-local Thing = import("Thing").Thing
 
-Feature = Thing:new({
-    climbable = false,
-    passable = true,
-})
+local function test()
+    local package = import("import_test_package")
+    assert(type(package) == "table")
+    assert(local_var == nil)
+    assert(global_var == nil)
+    assert(package.local_var == nil)
+    assert(package.global_var == "test")
+end
 
-Wall = Feature:new({
-    char = "#",
-    passable = false,
-})
-
-Floor = Feature:new({
-    char = ".",
-})
-
-StairDown = Feature:new({
-    char = ">",
-    climbable = true,
-    direction = "down",
-})
-
-StairUp = Feature:new({
-    char = "<",
-    climbable = true,
-    direction = "up",
-})
-
+test()

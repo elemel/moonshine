@@ -21,13 +21,14 @@
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
 
-local Heap = require "Heap"
-local items = require "items"
-local Level = require "Level"
-local monsters = require "monsters"
-local move = require "move"
+local import = require("import")
+local Heap = import("Heap").Heap
+local items = import("items")
+local Level = import("Level").Level
+local monsters = import("monsters")
+local move = import("move").move
 
-local Game = {}
+Game = {}
 
 function Game:new()
     local game = {}
@@ -54,5 +55,3 @@ function Game:new()
 
     return game
 end
-
-return Game

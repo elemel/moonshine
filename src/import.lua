@@ -21,32 +21,23 @@
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
 
-local import = require("import")
-local Thing = import("Thing").Thing
+local packages = {}
 
-Feature = Thing:new({
-    climbable = false,
-    passable = true,
-})
+local function import(package_name)
+    local package = packages[package_name]
+    if package then
+        return package
+    end
+    local package = {}
+    packages[package_name] = package
+    setmetatable(package, {__index = _G})
+    local package_func = loadfile(package_name .. ".lua")
+    if package_func == nil then
+        error(string.format("cannot find package %q", package_name))
+    end
+    setfenv(package_func, package)
+    package_func()
+    return package
+end
 
-Wall = Feature:new({
-    char = "#",
-    passable = false,
-})
-
-Floor = Feature:new({
-    char = ".",
-})
-
-StairDown = Feature:new({
-    char = ">",
-    climbable = true,
-    direction = "down",
-})
-
-StairUp = Feature:new({
-    char = "<",
-    climbable = true,
-    direction = "up",
-})
-
+return import

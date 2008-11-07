@@ -21,10 +21,11 @@
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
 
-local mimic = require "mimic"
-local Tile = require "Tile"
-local features = require "features"
-local move = require "move"
+local import = require("import")
+local mimic = require("mimic")
+local move = import("move").move
+local features = import("features")
+local Tile = import("Tile").Tile
 
 local level_map = [[
 ###############################################################################
@@ -50,8 +51,6 @@ local level_map = [[
 ###############################################################################
 ###############################################################################
 ]]
-
-local Level = {}
 
 local char_to_feature = {
     ["#"] = features.Wall,
@@ -82,6 +81,8 @@ local function parse_map(map)
     return mimic.array(lines)
 end
 
+Level = {}
+
 function Level:new(level)
     level = level or {}
     setmetatable(level, self)
@@ -89,5 +90,3 @@ function Level:new(level)
     level.grid = parse_map(level_map)
     return level
 end
-
-return Level

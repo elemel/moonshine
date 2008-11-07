@@ -21,32 +21,6 @@
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
 
-local import = require("import")
-local Thing = import("Thing").Thing
+local local_var = "test"
 
-Feature = Thing:new({
-    climbable = false,
-    passable = true,
-})
-
-Wall = Feature:new({
-    char = "#",
-    passable = false,
-})
-
-Floor = Feature:new({
-    char = ".",
-})
-
-StairDown = Feature:new({
-    char = ">",
-    climbable = true,
-    direction = "down",
-})
-
-StairUp = Feature:new({
-    char = "<",
-    climbable = true,
-    direction = "up",
-})
-
+global_var = local_var

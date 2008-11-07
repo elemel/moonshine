@@ -21,24 +21,14 @@
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
 
-local Thing = require "Thing"
+local import = require("import")
+local Thing = import("Thing").Thing
 
-local Monster = Thing:new({
+Monster = Thing:new({
     mobile = true,
 })
 
-local Human = Monster:new({char = "@"})
-local Vampire = Monster:new({char = "V"})
-local Werewolf = Monster:new({char = "W"})
-local Zombie = Monster:new({char = "Z"})
-
-local monsters = {
-    Monster = Monster,
-
-    Human = Human,
-    Vampire = Vampire,
-    Werewolf = Werewolf,
-    Zombie = Zombie,
-}
-
-return monsters
+Human = Monster:new({char = "@"})
+Vampire = Monster:new({char = "V"})
+Werewolf = Monster:new({char = "W"})
+Zombie = Monster:new({char = "Z"})

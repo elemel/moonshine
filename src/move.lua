@@ -50,7 +50,7 @@ local function link(obj, env)
     env.first_inv = obj
 end
 
-local function move(obj, env)
+function move(obj, env)
     if obj.env then
         unlink(obj, obj.env)
     end
@@ -58,5 +58,3 @@ local function move(obj, env)
         link(obj, env)
     end
 end
-
-return move

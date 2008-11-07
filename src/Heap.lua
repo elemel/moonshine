@@ -24,7 +24,7 @@
 -- Inefficient heap implementation. To be replaced with a more efficient
 -- implementation later.
 
-local Heap = {}
+Heap = {}
 
 function Heap:new(before)
     local heap = {__before = before}
@@ -58,6 +58,3 @@ end
 function Heap:norm()
     table.sort(self, self.__before)
 end
-
-return Heap
-
