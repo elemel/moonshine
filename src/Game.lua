@@ -47,8 +47,8 @@ function Game:new()
     move(items.Boulder:new(), game.level.grid[9][22])
 
     -- Create some monsters.
+    move(monsters.Mummy:new(), game.level.grid[14][63])
     move(monsters.Vampire:new(), game.level.grid[15][65])
-    move(monsters.Werewolf:new(), game.level.grid[14][63])
     move(monsters.Zombie:new(), game.level.grid[15][60])
     move(monsters.Zombie:new(), game.level.grid[17][62])
     move(monsters.Zombie:new(), game.level.grid[15][66])

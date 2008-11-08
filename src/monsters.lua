@@ -29,6 +29,7 @@ Monster = Thing:new({
 })
 
 Human = Monster:new({char = "@"})
+Mummy = Monster:new({char = "M"})
 Vampire = Monster:new({char = "V"})
 Werewolf = Monster:new({char = "W"})
 Zombie = Monster:new({char = "Z"})
