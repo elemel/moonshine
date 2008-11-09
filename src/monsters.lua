@@ -26,6 +26,7 @@ local Thing = import("Thing").Thing
 
 Monster = Thing:new({
     mobile = true,
+    time = 0,
 })
 
 Human = Monster:new({char = "@"})

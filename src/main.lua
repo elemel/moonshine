@@ -26,11 +26,11 @@ local curses = require("curses")
 local Game = import("Game").Game
 local move = import("move").move
 
-local function to_screen_pos(y, x)
+function to_screen_pos(y, x)
     return y, x - 1
 end
 
-local function update_screen(win, game)
+function update_screen(win, game)
     local grid = game.level.grid
     local height, width = #grid, #grid[1]
     for game_y = 1, height do
@@ -45,19 +45,40 @@ local function update_screen(win, game)
     curses.move(screen_y, screen_x)
 end
 
-local function move_hero(game, dy, dx)
+function walk_action(game, monster, dy, dx)
     local grid = game.level.grid
     local height, width = #grid, #grid[1]
-    local new_y, new_x = game.hero.y + dy, game.hero.x + dx
+    local new_y, new_x = monster.y + dy, monster.x + dx
     if new_y >= 1 and new_y <= height and new_x >= 1 and new_x <= width and
        grid[new_y][new_x]:is_passable() then
-       game.hero.y = new_y
-       game.hero.x = new_x
-       move(game.hero, grid[new_y][new_x])
+       monster.y = new_y
+       monster.x = new_x
+       move(monster, grid[new_y][new_x])
+    end
+    monster.time = monster.time + 1
+end
+
+function sign(n)
+    if n < 0 then
+        return -1
+    elseif n > 0 then
+        return 1
+    else
+        return 0
     end
 end
 
-local function protected_main(win)
+function random_walk_action(game, monster)
+    dy = math.random(-1, 1)
+    dx = math.random(-1, 1)
+    if dy == 0 and dx == 0 or math.random(1, 100) <= 20 then
+        dy = sign(game.hero.y - monster.y)
+        dx = sign(game.hero.x - monster.x)
+    end
+    walk_action(game, monster, dy, dx)
+end
+
+function protected_main(win)
     curses.cbreak()
     curses.keypad(win, 1)
     curses.noecho()
@@ -71,29 +92,30 @@ local function protected_main(win)
             if key_char == "q" or key_char == "Q" then
                 break
             elseif key_code == curses.KEY_UP or key_char == "8" then
-                move_hero(game, -1, 0)
+                walk_action(game, thing, -1, 0)
             elseif key_code == curses.KEY_LEFT or key_char == "4" then
-                move_hero(game, 0, -1)
+                walk_action(game, thing, 0, -1)
             elseif key_code == curses.KEY_RIGHT or key_char == "6" then
-                move_hero(game, 0, 1)
+                walk_action(game, thing, 0, 1)
             elseif key_code == curses.KEY_DOWN or key_char == "2" then
-                move_hero(game, 1, 0)
+                walk_action(game, thing, 1, 0)
             elseif key_char == "7" then
-                move_hero(game, -1, -1)
+                walk_action(game, thing, -1, -1)
             elseif key_char == "9" then
-                move_hero(game, -1, 1)
+                walk_action(game, thing, -1, 1)
             elseif key_char == "1" then
-                move_hero(game, 1, -1)
+                walk_action(game, thing, 1, -1)
             elseif key_char == "3" then
-                move_hero(game, 1, 1)
+                walk_action(game, thing, 1, 1)
             end
+        else
+            random_walk_action(game, thing)
         end
-        thing.time = thing.time + 1
         game.queue:push(thing)
     end
 end
 
-local function main()
+function main()
     local win = curses.initscr()
     local status, result = pcall(protected_main, win)
     curses.endwin()
