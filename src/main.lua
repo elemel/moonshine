@@ -50,7 +50,7 @@ local function move_hero(game, dy, dx)
     local height, width = #grid, #grid[1]
     local new_y, new_x = game.hero.y + dy, game.hero.x + dx
     if new_y >= 1 and new_y <= height and new_x >= 1 and new_x <= width and
-       grid[new_y][new_x].first_inv.prev_inv.passable then
+       grid[new_y][new_x]:is_passable() then
        game.hero.y = new_y
        game.hero.x = new_x
        move(game.hero, grid[new_y][new_x])
