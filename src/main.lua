@@ -55,7 +55,7 @@ function walk_action(game, monster, dy, dx)
        monster.x = new_x
        move(monster, grid[new_y][new_x])
     end
-    monster.time = monster.time + 1
+    monster.time = monster.time + 1 / monster.speed
 end
 
 function sign(n)

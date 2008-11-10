@@ -27,10 +27,29 @@ local Thing = import("Thing").Thing
 Monster = Thing:new({
     mobile = true,
     time = 0,
+    speed = 1,
 })
 
-Human = Monster:new({char = "@"})
-Mummy = Monster:new({char = "M"})
-Vampire = Monster:new({char = "V"})
-Werewolf = Monster:new({char = "W"})
-Zombie = Monster:new({char = "Z"})
+Human = Monster:new({
+    char = "@",
+})
+
+Mummy = Monster:new({
+    char = "M",
+    speed = 0.8,
+})
+
+Vampire = Monster:new({
+    char = "V",
+    speed = 1.4
+})
+
+Werewolf = Monster:new({
+    char = "W",
+    speed = 1.2,
+})
+
+Zombie = Monster:new({
+    char = "Z",
+    speed = 0.6,
+})
