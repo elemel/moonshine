@@ -27,6 +27,17 @@ local Game = import("Game").Game
 local actions = import("actions")
 local ai = import("ai")
 
+directions = {
+    northwest = {-1, -1},
+    north = {-1, 0},
+    northeast = {-1, 1},
+    west = {0, -1},
+    east = {0, 1},
+    southwest = {1, -1},
+    south = {1, 0},
+    southeast = {1, 1},
+}
+
 function to_screen_pos(y, x)
     return y, x - 1
 end
@@ -64,6 +75,42 @@ function sign(n)
     end
 end
 
+function read_command(win)
+    local key_code = curses.wgetch(win)
+    local _, key_char = pcall(string.char, key_code)
+    if key_char == "q" or key_char == "Q" then
+        return "quit"
+    elseif key_char == "1" then
+        return "southwest"
+    elseif key_char == "2" or key_code == curses.KEY_DOWN then
+        return "south"
+    elseif key_char == "3" then
+        return "southeast"
+    elseif key_char == "4" or key_code == curses.KEY_LEFT then
+        return "west"
+    elseif key_char == "5" then
+        return "wait"
+    elseif key_char == "6" or key_code == curses.KEY_RIGHT then
+        return "east"
+    elseif key_char == "7" then
+        return "northwest"
+    elseif key_char == "8" or key_code == curses.KEY_UP then
+        return "north"
+    elseif key_char == "9" then
+        return "northeast"
+    else
+        return nil
+    end
+end
+
+function handle_command(command, game)
+    if directions[command] then
+        actions.walk_action(game, game.hero, unpack(directions[command]))
+    elseif command == "wait" then
+        actions.walk_action(game, game.hero, 0, 0)
+    end
+end
+
 function protected_main(win)
     curses.cbreak()
     curses.keypad(win, 1)
@@ -73,28 +120,11 @@ function protected_main(win)
         local thing = game.queue:pop()
         if thing == game.hero then
             update_screen(win, game)
-            local key_code = curses.wgetch(win)
-            local _, key_char = pcall(string.char, key_code)
-            if key_char == "q" or key_char == "Q" then
+            local command = read_command(win)
+            if command == "quit" then
                 break
-            elseif key_code == curses.KEY_UP or key_char == "8" then
-                actions.walk_action(game, thing, -1, 0)
-            elseif key_code == curses.KEY_LEFT or key_char == "4" then
-                actions.walk_action(game, thing, 0, -1)
-            elseif key_code == curses.KEY_RIGHT or key_char == "6" then
-                actions.walk_action(game, thing, 0, 1)
-            elseif key_code == curses.KEY_DOWN or key_char == "2" then
-                actions.walk_action(game, thing, 1, 0)
-            elseif key_char == "7" then
-                actions.walk_action(game, thing, -1, -1)
-            elseif key_char == "9" then
-                actions.walk_action(game, thing, -1, 1)
-            elseif key_char == "1" then
-                actions.actions.walk_action(game, thing, 1, -1)
-            elseif key_char == "3" then
-                actions.walk_action(game, thing, 1, 1)
-            elseif key_char == "5" then
-                actions.walk_action(game, thing, 0, 0)
+            elseif command ~= nil then
+                handle_command(command, game)
             end
         else
             ai.ai_action(game, thing)
