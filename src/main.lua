@@ -24,7 +24,8 @@
 local import = require("import")
 local curses = require("curses")
 local Game = import("Game").Game
-local move = import("move").move
+local actions = import("actions")
+local ai = import("ai")
 
 function to_screen_pos(y, x)
     return y, x - 1
@@ -53,24 +54,6 @@ function update_screen(win, game)
     curses.move(screen_y, screen_x)
 end
 
-function walk_action(game, monster, dy, dx)
-    local grid = game.level.grid
-    local height, width = #grid, #grid[1]
-    local new_y, new_x = monster.y + dy, monster.x + dx
-    if new_y >= 1 and new_y <= height and new_x >= 1 and new_x <= width and
-       grid[new_y][new_x]:is_passable() then
-       monster.y = new_y
-       monster.x = new_x
-       move(monster, grid[new_y][new_x])
-    end
-    monster.time = monster.time + 1 / monster.speed
-end
-
-function attack_action(game, monster, target)
-    target.power = target.power - monster.damage / 10
-    monster.time = monster.time + 1 / monster.speed
-end
-
 function sign(n)
     if n < 0 then
         return -1
@@ -78,23 +61,6 @@ function sign(n)
         return 1
     else
         return 0
-    end
-end
-
-function ai_action(game, monster)
-    local dy = game.hero.y - monster.y
-    local dx = game.hero.x - monster.x
-    if math.abs(dy) <= 1 and math.abs(dx) <= 1 then
-        attack_action(game, monster, game.hero)
-    else
-        if math.random(1, 100) <= 20 then
-            dy = sign(dy)
-            dx = sign(dx)
-        else
-            dy = math.random(-1, 1)
-            dx = math.random(-1, 1)
-        end
-        walk_action(game, monster, dy, dx)
     end
 end
 
@@ -112,27 +78,26 @@ function protected_main(win)
             if key_char == "q" or key_char == "Q" then
                 break
             elseif key_code == curses.KEY_UP or key_char == "8" then
-                walk_action(game, thing, -1, 0)
+                actions.walk_action(game, thing, -1, 0)
             elseif key_code == curses.KEY_LEFT or key_char == "4" then
-                walk_action(game, thing, 0, -1)
+                actions.walk_action(game, thing, 0, -1)
             elseif key_code == curses.KEY_RIGHT or key_char == "6" then
-                walk_action(game, thing, 0, 1)
+                actions.walk_action(game, thing, 0, 1)
             elseif key_code == curses.KEY_DOWN or key_char == "2" then
-                walk_action(game, thing, 1, 0)
+                actions.walk_action(game, thing, 1, 0)
             elseif key_char == "7" then
-                walk_action(game, thing, -1, -1)
+                actions.walk_action(game, thing, -1, -1)
             elseif key_char == "9" then
-                walk_action(game, thing, -1, 1)
+                actions.walk_action(game, thing, -1, 1)
             elseif key_char == "1" then
-                walk_action(game, thing, 1, -1)
+                actions.actions.walk_action(game, thing, 1, -1)
             elseif key_char == "3" then
-                walk_action(game, thing, 1, 1)
+                actions.walk_action(game, thing, 1, 1)
             elseif key_char == "5" then
-                -- Rest.
-                thing.time = thing.time + 1 / thing.speed
+                actions.walk_action(game, thing, 0, 0)
             end
         else
-            ai_action(game, thing)
+            ai.ai_action(game, thing)
         end
         game.queue:push(thing)
     end
