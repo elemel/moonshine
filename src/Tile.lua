@@ -34,3 +34,11 @@ function Tile:is_passable()
     return self.first_inv == nil or self.first_inv.passable and
            self.first_inv.prev_inv.passable
 end
+
+function Tile:get_y()
+    return self.y
+end
+
+function Tile:get_x()
+    return self.x
+end

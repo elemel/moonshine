@@ -2,8 +2,8 @@ local import = require("import")
 local actions = import("actions")
 
 function ai_action(game, monster)
-    local dy = game.hero.y - monster.y
-    local dx = game.hero.x - monster.x
+    local dy = game.hero:get_y() - monster:get_y()
+    local dx = game.hero:get_x() - monster:get_x()
     if math.abs(dy) <= 1 and math.abs(dx) <= 1 then
         actions.attack_action(game, monster, game.hero)
     else

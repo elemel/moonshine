@@ -78,7 +78,14 @@ local function parse_map(map)
     local lines = mimic.split(map, "\n")
     lines = mimic.filter(lines, not_blank)
     lines = mimic.map(lines, parse_line)
-    return mimic.array(lines)
+    lines = mimic.array(lines)
+    for y, line in ipairs(lines) do
+        for x, tile in ipairs(line) do
+            tile.y = y
+            tile.x = x
+        end
+    end
+    return lines
 end
 
 Level = {}

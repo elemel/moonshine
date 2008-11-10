@@ -36,3 +36,10 @@ function Thing:new(thing)
     return thing
 end
 
+function Thing:get_y()
+    return self.env and self.env:get_y()
+end
+
+function Thing:get_x()
+    return self.env and self.env:get_x()
+end

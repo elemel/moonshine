@@ -61,7 +61,8 @@ function update_screen(win, game)
     curses.addstr(string.rep("=", math.floor(game.hero.power * width)))
 
     -- Move cursor to hero.
-    local screen_y, screen_x = to_screen_pos(game.hero.y, game.hero.x)
+    local screen_y, screen_x = to_screen_pos(game.hero:get_y(),
+                                             game.hero:get_x())
     curses.move(screen_y, screen_x)
 end
 

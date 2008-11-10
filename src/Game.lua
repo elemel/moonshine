@@ -37,8 +37,8 @@ function Game:new()
     game.level = Level:new()
 
     -- Create the hero.
-    game.hero = monsters.Human:new({y = 10, x = 17})
-    move(game.hero, game.level.grid[game.hero.y][game.hero.x])
+    game.hero = monsters.Human:new()
+    move(game.hero, game.level.grid[10][17])
     game.queue = Heap:new(function(a, b) return a.time < b.time end)
     game.queue:push(game.hero)
 
@@ -48,14 +48,22 @@ function Game:new()
 
     -- Create some monsters.
     local ms = {
-        monsters.Mummy:new({y = 14, x = 63}),
-        monsters.Vampire:new({y = 15, x = 65}),
-        monsters.Zombie:new({y = 15, x = 60}),
-        monsters.Zombie:new({y = 17, x = 62}),
-        monsters.Zombie:new({y = 15, x = 66}),
+        monsters.Mummy:new(),
+        monsters.Vampire:new(),
+        monsters.Zombie:new(),
+        monsters.Zombie:new(),
+        monsters.Zombie:new(),
     }
-    for index, monster in ipairs(ms) do
-        move(monster, game.level.grid[monster.y][monster.x])
+    local positions = {
+        {14, 63},
+        {15, 65},
+        {15, 60},
+        {17, 62},
+        {15, 66},
+    }
+    for i, monster in ipairs(ms) do
+        local y, x = unpack(positions[i])
+        move(monster, game.level.grid[y][x])
         game.queue:push(monster)
     end
 
