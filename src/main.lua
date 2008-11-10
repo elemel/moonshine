@@ -31,6 +31,7 @@ function to_screen_pos(y, x)
 end
 
 function update_screen(win, game)
+    -- Update grid.
     local grid = game.level.grid
     local height, width = #grid, #grid[1]
     for game_y = 1, height do
@@ -41,11 +42,13 @@ function update_screen(win, game)
         end
     end
 
+    -- Update power bar.
     curses.move(height + 1, 0)
     curses.addstr(string.rep(" ", width))
     curses.move(height + 1, 0)
     curses.addstr(string.rep("=", math.floor(game.hero.power * width)))
 
+    -- Move cursor to hero.
     local screen_y, screen_x = to_screen_pos(game.hero.y, game.hero.x)
     curses.move(screen_y, screen_x)
 end
@@ -124,6 +127,9 @@ function protected_main(win)
                 walk_action(game, thing, 1, -1)
             elseif key_char == "3" then
                 walk_action(game, thing, 1, 1)
+            elseif key_char == "5" then
+                -- Rest.
+                thing.time = thing.time + 1 / thing.speed
             end
         else
             ai_action(game, thing)
