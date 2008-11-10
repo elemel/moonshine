@@ -15,6 +15,7 @@ function walk_action(game, monster, dy, dx)
 end
 
 function attack_action(game, monster, target)
-    target.power = target.power - monster.damage / 10
+    target.power = target.power - (math.random() + math.random()) *
+                   monster.damage / 10
     monster.time = monster.time + 1 / monster.speed
 end
