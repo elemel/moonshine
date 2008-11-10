@@ -28,6 +28,9 @@ Monster = Thing:new({
     mobile = true,
     time = 0,
     speed = 1,
+    max_power = 1,
+    power = 1,
+    damage = 1,
 })
 
 Human = Monster:new({

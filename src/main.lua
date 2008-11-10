@@ -41,6 +41,11 @@ function update_screen(win, game)
         end
     end
 
+    curses.move(height + 1, 0)
+    curses.addstr(string.rep(" ", width))
+    curses.move(height + 1, 0)
+    curses.addstr(string.rep("=", math.floor(game.hero.power * width)))
+
     local screen_y, screen_x = to_screen_pos(game.hero.y, game.hero.x)
     curses.move(screen_y, screen_x)
 end
@@ -58,6 +63,11 @@ function walk_action(game, monster, dy, dx)
     monster.time = monster.time + 1 / monster.speed
 end
 
+function attack_action(game, monster, target)
+    target.power = target.power - monster.damage / 10
+    monster.time = monster.time + 1 / monster.speed
+end
+
 function sign(n)
     if n < 0 then
         return -1
@@ -68,14 +78,21 @@ function sign(n)
     end
 end
 
-function random_walk_action(game, monster)
-    dy = math.random(-1, 1)
-    dx = math.random(-1, 1)
-    if dy == 0 and dx == 0 or math.random(1, 100) <= 20 then
-        dy = sign(game.hero.y - monster.y)
-        dx = sign(game.hero.x - monster.x)
+function ai_action(game, monster)
+    local dy = game.hero.y - monster.y
+    local dx = game.hero.x - monster.x
+    if math.abs(dy) <= 1 and math.abs(dx) <= 1 then
+        attack_action(game, monster, game.hero)
+    else
+        if math.random(1, 100) <= 20 then
+            dy = sign(dy)
+            dx = sign(dx)
+        else
+            dy = math.random(-1, 1)
+            dx = math.random(-1, 1)
+        end
+        walk_action(game, monster, dy, dx)
     end
-    walk_action(game, monster, dy, dx)
 end
 
 function protected_main(win)
@@ -109,7 +126,7 @@ function protected_main(win)
                 walk_action(game, thing, 1, 1)
             end
         else
-            random_walk_action(game, thing)
+            ai_action(game, thing)
         end
         game.queue:push(thing)
     end
