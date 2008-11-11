@@ -34,3 +34,6 @@ Boulder = Item:new({
     passable = false,
 })
 
+Corpse = Item:new({
+    char = "%",
+})
