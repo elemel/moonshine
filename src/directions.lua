@@ -21,39 +21,13 @@
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
 
-local import = require("import")
-local Thing = import("Thing").Thing
-
-Monster = Thing:new({
-    alive = true,
-    damage = 1,
-    max_power = 1,
-    mobile = true,
-    power = 1,
-    speed = 1,
-    time = 0,
-})
-
-Human = Monster:new({
-    char = "@",
-})
-
-Mummy = Monster:new({
-    char = "M",
-    speed = 0.8,
-})
-
-Vampire = Monster:new({
-    char = "V",
-    speed = 1.4
-})
-
-Werewolf = Monster:new({
-    char = "W",
-    speed = 1.2,
-})
-
-Zombie = Monster:new({
-    char = "Z",
-    speed = 0.6,
-})
+directions = {
+    northwest = {-1, -1},
+    north = {-1, 0},
+    northeast = {-1, 1},
+    west = {0, -1},
+    east = {0, 1},
+    southwest = {1, -1},
+    south = {1, 0},
+    southeast = {1, 1},
+}

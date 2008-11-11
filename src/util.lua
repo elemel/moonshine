@@ -21,39 +21,13 @@
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
 
-local import = require("import")
-local Thing = import("Thing").Thing
-
-Monster = Thing:new({
-    alive = true,
-    damage = 1,
-    max_power = 1,
-    mobile = true,
-    power = 1,
-    speed = 1,
-    time = 0,
-})
-
-Human = Monster:new({
-    char = "@",
-})
-
-Mummy = Monster:new({
-    char = "M",
-    speed = 0.8,
-})
-
-Vampire = Monster:new({
-    char = "V",
-    speed = 1.4
-})
-
-Werewolf = Monster:new({
-    char = "W",
-    speed = 1.2,
-})
-
-Zombie = Monster:new({
-    char = "Z",
-    speed = 0.6,
-})
+function get_neighbor_tile(game, tile, dy, dx)
+    local grid = game.level.grid
+    local height, width = #grid, #grid[1]
+    local new_y, new_x = tile.y + dy, tile.x + dx
+    if new_y >= 1 and new_y <= height and new_x >= 1 and new_x <= width then
+        return game.level.grid[new_y][new_x]
+    else
+        return nil
+    end
+end

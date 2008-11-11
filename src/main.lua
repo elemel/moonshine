@@ -27,29 +27,8 @@ local Game = import("Game").Game
 local actions = import("actions")
 local ai = import("ai")
 local ui = import("ui")
-
-directions = {
-    northwest = {-1, -1},
-    north = {-1, 0},
-    northeast = {-1, 1},
-    west = {0, -1},
-    east = {0, 1},
-    southwest = {1, -1},
-    south = {1, 0},
-    southeast = {1, 1},
-}
-
-function get_neighbor_tile(game, tile, direction)
-    local grid = game.level.grid
-    local height, width = #grid, #grid[1]
-    local dy, dx = unpack(directions[direction])
-    local new_y, new_x = tile.y + dy, tile.x + dx
-    if new_y >= 1 and new_y <= height and new_x >= 1 and new_x <= width then
-        return game.level.grid[new_y][new_x]
-    else
-        return nil
-    end
-end
+local commands = import("commands")
+local directions = import("directions").directions
 
 function sign(n)
     if n < 0 then
@@ -58,14 +37,6 @@ function sign(n)
         return 1
     else
         return 0
-    end
-end
-
-function handle_command(command, game)
-    if directions[command] then
-        actions.walk_action(game, game.hero, unpack(directions[command]))
-    elseif command == "wait" then
-        actions.walk_action(game, game.hero, 0, 0)
     end
 end
 
@@ -82,12 +53,14 @@ function protected_main(win)
             if command == "quit" then
                 break
             elseif command ~= nil then
-                handle_command(command, game)
+                commands.handle_command(command, game)
             end
-        else
+        elseif thing.env then
             ai.ai_action(game, thing)
         end
-        game.queue:push(thing)
+        if thing.env then
+            game.queue:push(thing)
+        end
     end
 end
 

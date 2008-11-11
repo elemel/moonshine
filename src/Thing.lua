@@ -22,6 +22,7 @@
 -- OTHER DEALINGS IN THE SOFTWARE.
 
 Thing = {
+    alive = false,
     char = " ",
     count = 1,
     mobile = false,

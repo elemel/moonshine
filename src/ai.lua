@@ -1,5 +1,6 @@
 local import = require("import")
 local actions = import("actions")
+local util = import("util")
 
 function ai_action(game, monster)
     local dy = game.hero:get_y() - monster:get_y()
@@ -14,7 +15,8 @@ function ai_action(game, monster)
             dy = math.random(-1, 1)
             dx = math.random(-1, 1)
         end
-        actions.walk_action(game, monster, dy, dx)
+        local tile = util.get_neighbor_tile(game, monster.env, dy, dx)
+        actions.walk_action(game, monster, tile)
     end
 end
 

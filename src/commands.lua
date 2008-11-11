@@ -22,38 +22,22 @@
 -- OTHER DEALINGS IN THE SOFTWARE.
 
 local import = require("import")
-local Thing = import("Thing").Thing
+local actions = import("actions")
+local directions = import("directions").directions
+local util = import("util")
 
-Monster = Thing:new({
-    alive = true,
-    damage = 1,
-    max_power = 1,
-    mobile = true,
-    power = 1,
-    speed = 1,
-    time = 0,
-})
-
-Human = Monster:new({
-    char = "@",
-})
-
-Mummy = Monster:new({
-    char = "M",
-    speed = 0.8,
-})
-
-Vampire = Monster:new({
-    char = "V",
-    speed = 1.4
-})
-
-Werewolf = Monster:new({
-    char = "W",
-    speed = 1.2,
-})
-
-Zombie = Monster:new({
-    char = "Z",
-    speed = 0.6,
-})
+function handle_command(command, game)
+    if directions[command] then
+        local dy, dx = unpack(directions[command])
+        local tile = util.get_neighbor_tile(game, game.hero.env, dy, dx)
+        if tile ~= nil then
+            if tile.first_inv ~= nil and tile.first_inv.alive then
+                actions.attack_action(game, game.hero, tile.first_inv)
+            else
+                actions.walk_action(game, game.hero, tile)
+            end
+        end
+    elseif command == "wait" then
+        actions.walk_action(game, game.hero, game.hero.env)
+    end
+end
