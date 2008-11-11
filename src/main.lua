@@ -39,6 +39,18 @@ directions = {
     southeast = {1, 1},
 }
 
+function get_neighbor_tile(game, tile, direction)
+    local grid = game.level.grid
+    local height, width = #grid, #grid[1]
+    local dy, dx = unpack(directions[direction])
+    local new_y, new_x = tile.y + dy, tile.x + dx
+    if new_y >= 1 and new_y <= height and new_x >= 1 and new_x <= width then
+        return game.level.grid[new_y][new_x]
+    else
+        return nil
+    end
+end
+
 function sign(n)
     if n < 0 then
         return -1
