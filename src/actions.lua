@@ -24,6 +24,7 @@
 local import = require("import")
 local move = import("move").move
 local items = import("items")
+local util = import("util")
 
 function walk_action(game, monster, tile)
     if tile:is_passable() then
@@ -38,6 +39,20 @@ function attack_action(game, monster, target)
     if target ~= game.hero and target.power <= 0 then
         move(items.Corpse:new(), target.env)
         move(target, nil)
+    end
+    monster.time = monster.time + 1 / monster.speed
+end
+
+function push_action(game, monster, item)
+    local dy = item:get_y() - monster:get_y()
+    local dx = item:get_x() - monster:get_x()
+    local from_tile = item.env
+    local to_tile = util.get_neighbor_tile(game, from_tile, dy, dx)
+    if to_tile:is_passable() then
+        move(item, to_tile)
+    end
+    if from_tile:is_passable() then
+        move(monster, from_tile)
     end
     monster.time = monster.time + 1 / monster.speed
 end

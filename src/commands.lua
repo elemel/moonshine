@@ -33,6 +33,9 @@ function handle_command(command, game)
         if tile ~= nil then
             if tile.first_inv ~= nil and tile.first_inv.alive then
                 actions.attack_action(game, game.hero, tile.first_inv)
+            elseif tile.first_inv ~= nil and tile.first_inv.mobile and
+                    not tile.first_inv.passable then
+                actions.push_action(game, game.hero, tile.first_inv)
             else
                 actions.walk_action(game, game.hero, tile)
             end
