@@ -54,8 +54,13 @@ end
 function read_command(win)
     local key_code = curses.wgetch(win)
     local _, key_char = pcall(string.char, key_code)
-    if key_char == "q" or key_char == "Q" then
+    if false then
+    elseif key_char == "d" then
+        return "drop-first"
+    elseif key_char == "q" or key_char == "Q" then
         return "quit"
+    elseif key_char == "t" then
+        return "take-first"
     elseif key_char == "1" then
         return "southwest"
     elseif key_char == "2" or key_code == curses.KEY_DOWN then

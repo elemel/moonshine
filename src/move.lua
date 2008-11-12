@@ -31,7 +31,7 @@ local function unlink(obj)
         end
         obj.env = nil
         if obj.prev_inv ~= nil then
-            obj.prev_inv.next_invv = obj.next_inv
+            obj.prev_inv.next_inv = obj.next_inv
             obj.prev_inv = nil
         end
         if obj.next_inv ~= nil then
