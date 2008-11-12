@@ -24,7 +24,7 @@
 local curses = require("curses")
 
 function to_screen_pos(y, x)
-    return y, x - 1
+    return y + 1, x - 1
 end
 
 function update_screen(win, game)
@@ -40,9 +40,9 @@ function update_screen(win, game)
     end
 
     -- Update power bar.
-    curses.move(height + 1, 0)
+    curses.move(height + 3, 0)
     curses.addstr(string.rep(" ", width))
-    curses.move(height + 1, 0)
+    curses.move(height + 3, 0)
     curses.addstr(string.rep("=", math.floor(game.hero.power * width)))
 
     -- Move cursor to hero.
