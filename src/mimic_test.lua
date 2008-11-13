@@ -83,6 +83,10 @@ local function test_equiv()
     assert_not_equiv({1, 2, 3}, {1, 2, 3, 4})
 end
 
+local function test_join()
+    assert(mimic.join({"a", "b", "c"}) == "a b c")
+end
+
 local function test_product()
     assert(mimic.product({1, 2, 3, 4, 5, 6}) == 720)
 end
@@ -131,6 +135,7 @@ local function test()
     test_array()
     test_blank()
     test_equiv()
+    test_join()
     test_product()
     test_range()
     test_repr()

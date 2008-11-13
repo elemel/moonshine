@@ -63,6 +63,14 @@ local function iter(iterable)
     end
 end
 
+local function tab(iterable)
+    local result = {}
+    for key, value in iter(iterable) do
+        result[key] = value
+    end
+    return result
+end
+
 local function reduce(iterable, func, init)
     local next_item = iter(iterable)
     local result = init
@@ -181,6 +189,10 @@ local function items(t)
     end
 end
 
+local function join(iterable, separator)
+    return table.concat(array(iterable), (separator or " "))
+end
+
 local function keys(t)
     local key, value = nil, nil
     return function()
@@ -270,16 +282,8 @@ local function split(s, pattern, plain)
     end
 end
 
-function sum(iterable)
+local function sum(iterable)
     return reduce(iterable, add, 0)
-end
-
-local function tab(iterable)
-    local result = {}
-    for key, value in iter(iterable) do
-        result[key] = value
-    end
-    return result
 end
 
 local function zip_all(iterable_1, iterable_2)
@@ -320,6 +324,7 @@ return {
     filter = filter,
     items = items,
     iter = iter,
+    join = join,
     keys = keys,
     map = map,
     product = product,
@@ -328,6 +333,7 @@ return {
     set = set,
     split = split,
     sum = sum,
+    tab = tab,
     values = values,
     zip_all = zip_all,
     zip_any = zip_any,
