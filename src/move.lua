@@ -21,43 +21,76 @@
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
 
-local function unlink(obj)
-    if obj.env then
-        if obj.env.first_inv == obj then
-            obj.env.first_inv = obj.next_inv
+local function unlink(thing)
+    if thing.env then
+        if thing.env.first_inv == thing then
+            thing.env.first_inv = thing.next_inv
         end
-        if obj.env.last_inv == obj then
-            obj.env.last_inv = obj.prev_inv
+        if thing.env.last_inv == thing then
+            thing.env.last_inv = thing.prev_inv
         end
-        obj.env = nil
-        if obj.prev_inv ~= nil then
-            obj.prev_inv.next_invv = obj.next_inv
-            obj.prev_inv = nil
+        thing.env = nil
+        if thing.prev_inv ~= nil then
+            thing.prev_inv.next_inv = thing.next_inv
+            thing.prev_inv = nil
         end
-        if obj.next_inv ~= nil then
-            obj.next_inv.prev_inv = obj.prev_inv
-            obj.next_inv = nil    
+        if thing.next_inv ~= nil then
+            thing.next_inv.prev_inv = thing.prev_inv
+            thing.next_inv = nil    
         end
     end
 end
 
-local function link(obj, env)
+local function rank(thing)
+    if thing.alive then
+        return 1
+    elseif not thing.mobile then
+        return 4
+    elseif not thing.passable then
+        return 2
+    else
+        return 3
+    end
+end
+
+local function less_rank(a, b)
+    return rank(a) < rank(b)
+end
+
+local function link(thing, env, less)
+    less = less or less_rank
     if env then
+        local prev_inv = nil
+        local next_inv = nil        
         if env.first_inv ~= nil then
-            obj.next_inv = env.first_inv
-            env.first_inv.prev_inv = obj
+            if not less(env.first_inv, thing) then
+                next_inv = env.first_inv
+            elseif not less(thing, env.last_inv) then
+                prev_inv = env.last_inv
+            else
+                prev_inv = env.first_inv
+                while prev_inv.next_inv and less(prev_inv.next_inv, thing) do
+                    prev_inv = prev_inv.next_inv
+                end
+            end
         end
-        if obj.prev_inv == nil then
-            env.first_inv = obj
+        if prev_inv then
+            thing.prev_inv = prev_inv
+            prev_inv.next_inv = thing
+        else
+            env.first_inv = thing
         end
-        if obj.next_inv == nil then
-            env.last_inv = obj
+        if next_inv then
+            thing.next_inv = next_inv
+            next_inv.prev_inv = thing
+        else
+            env.last_inv = thing
         end
-        obj.env = env
+        thing.env = env
     end
 end
 
-function move(obj, env)
-    unlink(obj)
-    link(obj, env)
+function move(thing, env)
+    unlink(thing)
+    link(thing, env)
 end
