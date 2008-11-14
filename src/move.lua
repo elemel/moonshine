@@ -72,6 +72,7 @@ local function link(thing, env, less)
                 while prev_inv.next_inv and less(prev_inv.next_inv, thing) do
                     prev_inv = prev_inv.next_inv
                 end
+                next_inv = prev_inv.next_inv
             end
         end
         if prev_inv then

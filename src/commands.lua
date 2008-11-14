@@ -26,6 +26,20 @@ local actions = import("actions")
 local directions = import("directions").directions
 local util = import("util")
 
+function drop_first_command(game)
+    local item = util.get_first_item(game.hero)
+    if item then
+        actions.drop_action(game, game.hero, item)
+    end
+end
+
+function take_first_command(game)
+    local item = util.get_first_item(game.hero.env)
+    if item then
+        actions.take_action(game, game.hero, item)
+    end
+end
+
 function handle_command(command, game)
     if directions[command] then
         local dy, dx = unpack(directions[command])
@@ -40,6 +54,10 @@ function handle_command(command, game)
                 actions.walk_action(game, game.hero, tile)
             end
         end
+    elseif command == "drop-first" then
+        drop_first_command(game)
+    elseif command == "take-first" then
+        take_first_command(game)
     elseif command == "wait" then
         actions.walk_action(game, game.hero, game.hero.env)
     end

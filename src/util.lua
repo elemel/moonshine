@@ -21,6 +21,9 @@
 -- FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 -- OTHER DEALINGS IN THE SOFTWARE.
 
+local import = require("import")
+local move = import("move").move
+
 function get_neighbor_tile(game, tile, dy, dx)
     local grid = game.level.grid
     local height, width = #grid, #grid[1]
@@ -30,4 +33,15 @@ function get_neighbor_tile(game, tile, dy, dx)
     else
         return nil
     end
+end
+
+function get_first_item(env)
+    thing = env.first_inv
+    while thing do
+        if not thing.alive and thing.mobile then
+            break
+        end
+        thing = thing.next_inv
+    end
+    return thing
 end
