@@ -36,6 +36,9 @@ end
 
 function inventory_first_command(win, game)
     local message = "You have nothing."
+    if game.hero.first_inv then
+        message = "You have something."
+    end
     ui.write_message(win, game, message)
 end
 
