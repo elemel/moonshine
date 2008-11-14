@@ -53,7 +53,7 @@ function protected_main(win)
             if command == "quit" then
                 break
             elseif command ~= nil then
-                commands.handle_command(command, game)
+                commands.handle_command(command, win, game)
             end
         elseif thing.env then
             ai.ai_action(game, thing)

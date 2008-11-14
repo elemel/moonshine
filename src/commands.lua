@@ -24,6 +24,7 @@
 local import = require("import")
 local actions = import("actions")
 local directions = import("directions").directions
+local ui = import("ui")
 local util = import("util")
 
 function drop_first_command(game)
@@ -33,6 +34,11 @@ function drop_first_command(game)
     end
 end
 
+function inventory_first_command(win, game)
+    local message = "You have nothing."
+    ui.write_message(win, game, message)
+end
+
 function take_first_command(game)
     local item = util.get_first_item(game.hero.env)
     if item then
@@ -40,7 +46,7 @@ function take_first_command(game)
     end
 end
 
-function handle_command(command, game)
+function handle_command(command, win, game)
     if directions[command] then
         local dy, dx = unpack(directions[command])
         local tile = util.get_neighbor_tile(game, game.hero.env, dy, dx)
@@ -56,6 +62,8 @@ function handle_command(command, game)
         end
     elseif command == "drop-first" then
         drop_first_command(game)
+    elseif command == "inventory-first" then
+        inventory_first_command(win, game)
     elseif command == "take-first" then
         take_first_command(game)
     elseif command == "wait" then
