@@ -31,22 +31,26 @@ Feature = Thing:new({
 
 Wall = Feature:new({
     char = "#",
+    desc = "a wall",
     passable = false,
 })
 
 Floor = Feature:new({
     char = ".",
+    desc = "a floor",
 })
 
 StairDown = Feature:new({
     char = ">",
     climbable = true,
+    desc = "a stair",
     direction = "down",
 })
 
 StairUp = Feature:new({
     char = "<",
     climbable = true,
+    desc = "a stair",
     direction = "up",
 })
 
