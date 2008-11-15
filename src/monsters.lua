@@ -36,24 +36,29 @@ Monster = Thing:new({
 
 Human = Monster:new({
     char = "@",
+    desc = "a human",
 })
 
 Mummy = Monster:new({
     char = "M",
+    desc = "a mummy",
     speed = 0.8,
 })
 
 Vampire = Monster:new({
     char = "V",
+    desc = "a vampire",
     speed = 1.4
 })
 
 Werewolf = Monster:new({
     char = "W",
+    desc = "a werewolf",
     speed = 1.2,
 })
 
 Zombie = Monster:new({
     char = "Z",
+    desc = "a zombie",
     speed = 0.6,
 })

@@ -32,8 +32,10 @@ Item = Thing.Thing:new({
 Boulder = Item:new({
     char = "0",
     passable = false,
+    desc = "a boulder",
 })
 
 Corpse = Item:new({
     char = "%",
+    desc = "a corpse",
 })
