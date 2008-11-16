@@ -35,7 +35,7 @@ function drop_first_command(game)
 end
 
 function inventory_command(win, game)
-    ui.write_message(win, game, "Under construction.")
+    ui.search_dialog(win, "Inventory: ", {})
 end
 
 function inventory_first_command(win, game)

@@ -88,9 +88,17 @@ function read_command(win)
     end
 end
 
-function write_message(win, game, message)
-    curses.move(0, 0)
+function write_line(win, y, line)
+    curses.move(y, 0)
     curses.addstr(string.rep(" ", 79))
-    curses.move(0, 0)
-    curses.addstr(string.sub(message, 1, 79))
+    curses.move(y, 0)
+    curses.addstr(string.sub(line, 1, 79))
+end
+
+function write_message(win, game, message)
+    write_line(win, 0, message)
+end
+
+function search_dialog(win, prompt, items)
+    write_line(win, 0, prompt)    
 end
