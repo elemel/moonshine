@@ -34,6 +34,10 @@ function drop_first_command(game)
     end
 end
 
+function inventory_command(win, game)
+    ui.write_message(win, game, "Under construction.")
+end
+
 function inventory_first_command(win, game)
     local message = "You have nothing."
     if game.hero.first_inv then
@@ -65,6 +69,8 @@ function handle_command(command, win, game)
         end
     elseif command == "drop-first" then
         drop_first_command(game)
+    elseif command == "inventory" then
+        inventory_command(win, game)
     elseif command == "inventory-first" then
         inventory_first_command(win, game)
     elseif command == "take-first" then

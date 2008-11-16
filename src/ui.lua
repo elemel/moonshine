@@ -57,6 +57,8 @@ function read_command(win)
     if false then
     elseif key_char == "d" then
         return "drop-first"
+    elseif key_char == "I" then
+        return "inventory"
     elseif key_char == "i" then
         return "inventory-first"
     elseif key_char == "q" or key_char == "Q" then
