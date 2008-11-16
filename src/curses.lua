@@ -40,6 +40,8 @@ local funcs = {
     nocbreak = {"int"},
     noecho = {"int"},
     notimeout = {"int", "pointer", "int"},
+    standend = {"int"},
+    standout = {"int"},
     timeout = {"void", "int"},
     wgetch = {"int", "pointer"},
 }

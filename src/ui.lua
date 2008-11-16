@@ -108,13 +108,35 @@ function write_message(win, game, message)
 end
 
 function search_dialog(win, prompt, items)
+    local pattern = ""
     while true do
         curses.clear()
-        for i, item in ipairs(items) do
-            write_line(win, i + 1, item.desc)
+        local y = 2
+        for _, item in ipairs(items) do
+            local desc = item.desc
+            local start, stop = string.find(desc, pattern, 1, true)
+            if start then
+                curses.move(y, 0)
+                curses.addstr(string.sub(desc, 1, start - 1))
+                curses.standout()
+                curses.addstr(string.sub(desc, start, stop))
+                curses.standend()
+                curses.addstr(string.sub(desc, stop + 1, -1))
+                y = y + 1
+            end
         end
-        write_line(win, 0, prompt)
-        curses.wgetch(win)
-        break
+        write_line(win, 0, prompt .. pattern)
+        local key_code = curses.wgetch(win)
+        if key_code == curses.KEY_BACKSPACE then
+            if pattern == "" then
+                break
+            else
+                pattern = string.sub(pattern, 1, -2)
+            end
+        end
+        local status, key_char = pcall(string.char, key_code)
+        if status then
+            pattern = pattern .. key_char
+        end
     end
 end
