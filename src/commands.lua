@@ -35,7 +35,13 @@ function drop_first_command(game)
 end
 
 function inventory_command(win, game)
-    ui.search_dialog(win, "Inventory: ", {})
+    local items = {}
+    local item = game.hero.first_inv
+    while item do
+        table.insert(items, item)
+        item = item.next_inv
+    end
+    ui.search_dialog(win, "Inventory: ", items)
 end
 
 function inventory_first_command(win, game)

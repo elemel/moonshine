@@ -27,7 +27,22 @@ function to_screen_pos(y, x)
     return y + 1, x - 1
 end
 
+function write_line(win, y, line)
+    curses.move(y, 0)
+    curses.addstr(string.rep(" ", 79))
+    curses.move(y, 0)
+    curses.addstr(string.sub(line, 1, 79))
+end
+
 function update_screen(win, game)
+    -- Clear screen.
+    curses.clear()
+
+    -- Update message.
+    if game.message then
+        write_line(win, 0, game.message)
+    end
+
     -- Update grid.
     local grid = game.level.grid
     local height, width = #grid, #grid[1]
@@ -88,17 +103,18 @@ function read_command(win)
     end
 end
 
-function write_line(win, y, line)
-    curses.move(y, 0)
-    curses.addstr(string.rep(" ", 79))
-    curses.move(y, 0)
-    curses.addstr(string.sub(line, 1, 79))
-end
-
 function write_message(win, game, message)
-    write_line(win, 0, message)
+    game.message = message
 end
 
 function search_dialog(win, prompt, items)
-    write_line(win, 0, prompt)    
+    while true do
+        curses.clear()
+        for i, item in ipairs(items) do
+            write_line(win, i + 1, item.desc)
+        end
+        write_line(win, 0, prompt)
+        curses.wgetch(win)
+        break
+    end
 end

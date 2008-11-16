@@ -29,6 +29,7 @@ local funcs = {
     addch = {"int", "long"},
     addstr = {"int", "string"},
     cbreak = {"int"},
+    clear = {"void"},
     echo = {"int"},
     endwin = {"int"},
     halfdelay = {"int", "int"},
