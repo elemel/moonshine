@@ -41,7 +41,7 @@ Corpse = Item:new({
 })
 
 Knife = Item:new({
-    char = "(",
+    char = ")",
     desc = "a knife",
 })
 

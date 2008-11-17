@@ -35,13 +35,29 @@ function get_neighbor_tile(game, tile, dy, dx)
     end
 end
 
+function is_item(thing)
+    return not thing.alive and thing.mobile
+end
+
 function get_first_item(env)
     thing = env.first_inv
     while thing do
-        if not thing.alive and thing.mobile then
+        if is_item(thing) then
             break
         end
         thing = thing.next_inv
     end
     return thing
+end
+
+function get_all_items(env)
+    local items = {}
+    local thing = env.first_inv
+    while thing do
+        if is_item(thing) then
+            table.insert(items, thing)
+        end
+        thing = thing.next_inv
+    end
+    return items
 end

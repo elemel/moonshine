@@ -42,6 +42,14 @@ local count_words = {
     [12] = "twelwe",
 }
 
+function drop_command(win, game)
+    local items = util.get_all_items(game.hero)
+    local item = ui.search_dialog(win, "Drop: ", items)
+    if item then
+        actions.drop_action(game, game.hero, item)
+    end
+end
+
 function drop_first_command(game)
     local item = util.get_first_item(game.hero)
     if item then
@@ -50,12 +58,7 @@ function drop_first_command(game)
 end
 
 function inventory_command(win, game)
-    local items = {}
-    local item = game.hero.first_inv
-    while item do
-        table.insert(items, item)
-        item = item.next_inv
-    end
+    local items = util.get_all_items(game.hero)
     ui.search_dialog(win, "Inventory: ", items)
 end
 
@@ -102,6 +105,8 @@ function handle_command(command, win, game)
                 actions.walk_action(game, game.hero, tile)
             end
         end
+    elseif command == "drop" then
+        drop_command(win, game)
     elseif command == "drop-first" then
         drop_first_command(game)
     elseif command == "inventory" then

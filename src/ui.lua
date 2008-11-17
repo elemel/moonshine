@@ -69,7 +69,8 @@ end
 function read_command(win)
     local key_code = curses.wgetch(win)
     local _, key_char = pcall(string.char, key_code)
-    if false then
+    if key_char == "D" then
+        return "drop"
     elseif key_char == "d" then
         return "drop-first"
     elseif key_char == "I" then
@@ -112,10 +113,12 @@ function search_dialog(win, prompt, items)
     while true do
         curses.clear()
         local y = 2
+        local first_match = nil
         for _, item in ipairs(items) do
             local desc = item.desc
             local start, stop = string.find(desc, pattern, 1, true)
             if start then
+                first_match = first_match or item
                 curses.move(y, 0)
                 curses.addstr(string.sub(desc, 1, start - 1))
                 curses.standout()
@@ -129,14 +132,20 @@ function search_dialog(win, prompt, items)
         local key_code = curses.wgetch(win)
         if key_code == curses.KEY_BACKSPACE then
             if pattern == "" then
-                break
+                return nil
             else
                 pattern = string.sub(pattern, 1, -2)
             end
+        elseif key_code == curses.KEY_ENTER then
+            return first_match
         end
         local status, key_char = pcall(string.char, key_code)
         if status then
-            pattern = pattern .. key_char
+            if key_char == "\n" then
+                return first_match
+            else
+                pattern = pattern .. key_char
+            end
         end
     end
 end
