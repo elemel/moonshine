@@ -27,20 +27,14 @@ function to_screen_pos(y, x)
     return y + 1, x - 1
 end
 
-function write_line(win, y, line)
-    curses.move(y, 0)
-    curses.addstr(string.rep(" ", 79))
-    curses.move(y, 0)
-    curses.addstr(string.sub(line, 1, 79))
-end
-
 function update_screen(win, game)
     -- Clear screen.
     curses.clear()
 
     -- Update message.
     if game.message then
-        write_line(win, 0, game.message)
+        curses.move(0, 0)
+        curses.addstr(game.message)
     end
 
     -- Update grid.
@@ -127,7 +121,8 @@ function search_dialog(win, prompt, items)
                 y = y + 1
             end
         end
-        write_line(win, 0, prompt .. pattern)
+        curses.move(0, 0)
+        curses.addstr(prompt .. pattern)
         local key_code = curses.wgetch(win)
         if key_code == curses.KEY_BACKSPACE then
             if pattern == "" then
