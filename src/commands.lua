@@ -27,6 +27,21 @@ local directions = import("directions").directions
 local ui = import("ui")
 local util = import("util")
 
+local count_words = {
+    [1] = "one",
+    [2] = "two",
+    [3] = "three",
+    [4] = "four",
+    [5] = "five",
+    [6] = "six",
+    [7] = "seven",
+    [8] = "eight",
+    [9] = "nine",
+    [10] = "ten",
+    [11] = "eleven",
+    [12] = "twelwe",
+}
+
 function drop_first_command(game)
     local item = util.get_first_item(game.hero)
     if item then
@@ -47,7 +62,21 @@ end
 function inventory_first_command(win, game)
     local message = "You have nothing."
     if game.hero.first_inv then
-        message = "You have " .. game.hero.first_inv.desc .. "."
+        message = "You have " .. game.hero.first_inv.desc
+        local count = 0
+        item =  game.hero.first_inv.next_inv
+        while item do
+            count = count + item.count
+            item = item.next_inv
+        end
+        if count >= 1 then
+            count_word = count_words[count] or tostring(count)
+            message = message .. " and " .. count_word .. " other item"
+            if count >= 2 then
+                message = message .. "s"
+            end
+        end
+        message = message .. "."
     end
     ui.write_message(win, game, message)
 end
