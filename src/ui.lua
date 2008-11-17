@@ -72,6 +72,8 @@ function read_command(win)
         return "inventory-first"
     elseif key_char == "q" or key_char == "Q" then
         return "quit"
+    elseif key_char == "T" then
+        return "take"
     elseif key_char == "t" then
         return "take-first"
     elseif key_char == "1" then
@@ -120,6 +122,10 @@ function search_dialog(win, prompt, items)
                 curses.addstr(string.sub(desc, stop + 1, -1))
                 y = y + 1
             end
+        end
+        if y == 2 then
+            curses.move(y, 0)
+            curses.addstr("No match.")
         end
         curses.move(0, 0)
         curses.addstr(prompt .. pattern)

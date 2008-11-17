@@ -44,21 +44,33 @@ local count_words = {
 
 function drop_command(win, game)
     local items = util.get_all_items(game.hero)
-    local item = ui.search_dialog(win, "Drop: ", items)
-    if item then
-        actions.drop_action(game, game.hero, item)
+    if #items == 0 then
+        ui.write_message(win, game, "You have nothing.")
+        return
     end
+    local item = ui.search_dialog(win, "Drop: ", items)
+    if not item then
+        ui.write_message(win, game, "Never mind.")
+        return
+    end
+    actions.drop_action(game, game.hero, item)
 end
 
 function drop_first_command(game)
     local item = util.get_first_item(game.hero)
-    if item then
-        actions.drop_action(game, game.hero, item)
+    if not item then
+        ui.write_message(win, game, "You have nothing.")
+        return
     end
+    actions.drop_action(game, game.hero, item)
 end
 
 function inventory_command(win, game)
     local items = util.get_all_items(game.hero)
+    if #items == 0 then
+        ui.write_message(win, game, "You have nothing.")
+        return
+    end
     ui.search_dialog(win, "Inventory: ", items)
 end
 
@@ -84,11 +96,27 @@ function inventory_first_command(win, game)
     ui.write_message(win, game, message)
 end
 
+function take_command(win, game)
+    local items = util.get_all_items(game.hero.env)
+    if #items == 0 then
+        ui.write_message(win, game, "There is nothing here.")
+        return
+    end
+    local item = ui.search_dialog(win, "Take: ", items)
+    if not item then
+        ui.write_message(win, game, "Never mind.")
+        return
+    end
+    actions.take_action(game, game.hero, item)
+end
+
 function take_first_command(game)
     local item = util.get_first_item(game.hero.env)
-    if item then
-        actions.take_action(game, game.hero, item)
+    if not item then
+        ui.write_message(win, game, "There is nothing here.")
+        return
     end
+    actions.take_action(game, game.hero, item)
 end
 
 function handle_command(command, win, game)
@@ -113,6 +141,8 @@ function handle_command(command, win, game)
         inventory_command(win, game)
     elseif command == "inventory-first" then
         inventory_first_command(win, game)
+    elseif command == "take" then
+        take_command(win, game)
     elseif command == "take-first" then
         take_first_command(game)
     elseif command == "wait" then
