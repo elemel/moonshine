@@ -39,3 +39,18 @@ Corpse = Item:new({
     char = "%",
     desc = "a corpse",
 })
+
+Knife = Item:new({
+    char = "(",
+    desc = "a knife",
+})
+
+Rope = Item:new({
+    char = "(",
+    desc = "a rope",
+})
+
+Torch = Item:new({
+    char = "(",
+    desc = "a torch",
+})

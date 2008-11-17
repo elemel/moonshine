@@ -41,6 +41,11 @@ function Game:new()
     move(game.hero, game.level.grid[10][17])
     game.queue = Heap:new(function(a, b) return a.time < b.time end)
     game.queue:push(game.hero)
+    
+    -- Create starting equipment.
+    move(items.Knife:new(), game.hero)
+    move(items.Rope:new(), game.hero)
+    move(items.Torch:new(), game.hero)
 
     -- Create some boulders.
     move(items.Boulder:new(), game.level.grid[8][20])
