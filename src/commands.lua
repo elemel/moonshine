@@ -43,12 +43,11 @@ local count_words = {
 }
 
 function drop_command(win, game)
-    local items = util.get_all_items(game.hero)
-    if #items == 0 then
+    if #game.hero.inv == 0 then
         ui.write_message(win, game, "You have nothing.")
         return
     end
-    local item = ui.search_dialog(win, "Drop: ", items)
+    local item = ui.search_dialog(win, "Drop: ", game.hero.inv)
     if not item then
         ui.write_message(win, game, "Never mind.")
         return
@@ -57,42 +56,40 @@ function drop_command(win, game)
 end
 
 function drop_first_command(game)
-    local item = util.get_first_item(game.hero)
-    if not item then
+    if #game.hero.inv == 0 then
         ui.write_message(win, game, "You have nothing.")
         return
     end
-    actions.drop_action(game, game.hero, item)
+    actions.drop_action(game, game.hero, game.hero.inv[1])
 end
 
 function inventory_command(win, game)
-    local items = util.get_all_items(game.hero)
-    if #items == 0 then
+    if #game.hero.inv == 0 then
         ui.write_message(win, game, "You have nothing.")
         return
     end
-    ui.search_dialog(win, "Inventory: ", items)
+    ui.search_dialog(win, "Inventory: ", game.hero.inv)
 end
 
 function inventory_first_command(win, game)
-    local message = "You have nothing."
-    if game.hero.first_inv then
-        message = "You have " .. game.hero.first_inv.desc
-        local count = 0
-        local item =  game.hero.first_inv.next_inv
-        while item do
-            count = count + item.count
-            item = item.next_inv
-        end
-        if count >= 1 then
-            local count_word = count_words[count] or tostring(count)
-            message = message .. " and " .. count_word .. " other item"
-            if count >= 2 then
-                message = message .. "s"
-            end
-        end
-        message = message .. "."
+    if #game.hero.inv == 0 then
+        ui.write_message(win, game, "You have nothing.")
+        return
     end
+    message = "You have " .. game.hero.inv[1].desc
+    if #game.hero.inv > 1 then
+        local count = 0
+        for _, item in ipairs(game.hero.inv) do
+            count = count + item.count
+        end
+        count = count - game.hero.inv[1].count
+        local count_word = count_words[count] or tostring(count)
+        message = message .. " and " .. count_word .. " other item"
+        if count > 1 then
+            message = message .. "s"
+        end
+    end
+    message = message .. "."
     ui.write_message(win, game, message)
 end
 
@@ -107,8 +104,8 @@ end
 
 function look_first_command(win, game)
     local things = util.get_all_items(game.hero.env)
-    local feature = game.hero.env.last_inv
-    if feature.interesting then
+    local feature = game.hero.env.inv[#game.hero.env.inv]
+    if feature and feature.interesting then
         table.insert(things, 1, feature)
     end
     if #things == 0 then
@@ -125,7 +122,8 @@ function look_first_command(win, game)
         count = count - things[1].count
         local count_word = count_words[count] or tostring(count)
         message = message .. " and " .. count_word
-        message = message .. (feature.interesting and " item" or " other item")
+        message = message .. (feature and feature.interesting and " item" or
+                              " other item")
         if count > 1 then
             message = message .. "s"
         end
@@ -161,12 +159,12 @@ function handle_command(command, win, game)
     if directions[command] then
         local dy, dx = unpack(directions[command])
         local tile = util.get_neighbor_tile(game, game.hero.env, dy, dx)
-        if tile ~= nil then
-            if tile.first_inv ~= nil and tile.first_inv.alive then
-                actions.attack_action(game, game.hero, tile.first_inv)
-            elseif tile.first_inv ~= nil and tile.first_inv.mobile and
-                    not tile.first_inv.passable then
-                actions.push_action(game, game.hero, tile.first_inv)
+        if tile then
+            if tile.inv[1] and tile.inv[1].alive then
+                actions.attack_action(game, game.hero, tile.inv[1])
+            elseif tile.inv[1] and tile.inv[1].mobile and
+                    not tile.inv[1].passable then
+                actions.push_action(game, game.hero, tile.inv[1])
             else
                 actions.walk_action(game, game.hero, tile)
             end

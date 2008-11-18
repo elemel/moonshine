@@ -32,6 +32,7 @@ Thing = {
 
 function Thing:new(thing)
     thing = thing or {}
+    thing.inv = {}
     setmetatable(thing, self)
     self.__index = self
     return thing
