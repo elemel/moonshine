@@ -115,6 +115,7 @@ function search_dialog(win, prompt, items)
             if start then
                 first_match = first_match or item
                 curses.move(y, 0)
+                curses.addstr(item == first_match and "(*) " or "( ) ")
                 curses.addstr(string.sub(desc, 1, start - 1))
                 curses.standout()
                 curses.addstr(string.sub(desc, start, stop))
