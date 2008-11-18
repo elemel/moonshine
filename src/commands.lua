@@ -96,6 +96,39 @@ function inventory_first_command(win, game)
     ui.write_message(win, game, message)
 end
 
+function look_command(win, game)
+    local items = util.get_all_items(game.hero.env)
+    if #items == 0 then
+        ui.write_message(win, game, "There is nothing here.")
+        return
+    end
+    ui.search_dialog(win, "Look: ", items)
+end
+
+function look_first_command(win, game)
+    local items = util.get_all_items(game.hero.env)
+    if #items == 0 then
+        ui.write_message(win, game, "There is nothing here.")
+        return
+    end
+    local count = 0
+    for _, item in ipairs(items) do
+        count = count + item.count
+    end
+    local message = (count == 1) and "There is " or "There are "
+    message = message .. items[1].desc
+    if #items > 1 then
+        count = count - items[1].count
+        local count_word = count_words[count] or tostring(count)
+        message = message .. " and " .. count_word .. " other item"
+        if count > 1 then
+            message = message .. "s"
+        end
+    end
+    message = message .. " here."
+    ui.write_message(win, game, message)
+end
+
 function take_command(win, game)
     local items = util.get_all_items(game.hero.env)
     if #items == 0 then
@@ -141,6 +174,10 @@ function handle_command(command, win, game)
         inventory_command(win, game)
     elseif command == "inventory-first" then
         inventory_first_command(win, game)
+    elseif command == "look" then
+        look_command(win, game)
+    elseif command == "look-first" then
+        look_first_command(win, game)
     elseif command == "take" then
         take_command(win, game)
     elseif command == "take-first" then
