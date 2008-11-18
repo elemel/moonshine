@@ -79,13 +79,13 @@ function inventory_first_command(win, game)
     if game.hero.first_inv then
         message = "You have " .. game.hero.first_inv.desc
         local count = 0
-        item =  game.hero.first_inv.next_inv
+        local item =  game.hero.first_inv.next_inv
         while item do
             count = count + item.count
             item = item.next_inv
         end
         if count >= 1 then
-            count_word = count_words[count] or tostring(count)
+            local count_word = count_words[count] or tostring(count)
             message = message .. " and " .. count_word .. " other item"
             if count >= 2 then
                 message = message .. "s"
@@ -106,21 +106,26 @@ function look_command(win, game)
 end
 
 function look_first_command(win, game)
-    local items = util.get_all_items(game.hero.env)
-    if #items == 0 then
+    local things = util.get_all_items(game.hero.env)
+    local feature = game.hero.env.last_inv
+    if feature.interesting then
+        table.insert(things, 1, feature)
+    end
+    if #things == 0 then
         ui.write_message(win, game, "There is nothing here.")
         return
     end
     local count = 0
-    for _, item in ipairs(items) do
-        count = count + item.count
+    for _, thing in ipairs(things) do
+        count = count + thing.count
     end
-    local message = (count == 1) and "There is " or "There are "
-    message = message .. items[1].desc
-    if #items > 1 then
-        count = count - items[1].count
+    local message = (things[1].count == 1) and "There is " or "There are "
+    message = message .. things[1].desc
+    if #things > 1 then
+        count = count - things[1].count
         local count_word = count_words[count] or tostring(count)
-        message = message .. " and " .. count_word .. " other item"
+        message = message .. " and " .. count_word
+        message = message .. (feature.interesting and " item" or " other item")
         if count > 1 then
             message = message .. "s"
         end

@@ -49,7 +49,7 @@ function protected_main(win)
         local thing = game.queue:pop()
         if thing == game.hero then
             ui.update_screen(win, game)
-            game.message = nil
+            game.message = nilco
             local command = ui.read_command(win)
             if command == "quit" then
                 break
