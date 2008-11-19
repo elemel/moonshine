@@ -26,6 +26,7 @@ local Thing = import("Thing").Thing
 
 Feature = Thing:new({
     climbable = false,
+    interesting = true,
     passable = true,
 })
 
@@ -38,6 +39,7 @@ Wall = Feature:new({
 Floor = Feature:new({
     char = ".",
     desc = "a floor",
+    interesting = false,
 })
 
 StairDown = Feature:new({

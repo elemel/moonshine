@@ -25,14 +25,15 @@ Tile = {}
 
 function Tile:new(tile)
     tile = tile or {}
+    tile.inv = {}
     setmetatable(tile, self)
     self.__index = self
     return tile
 end
 
 function Tile:is_passable()
-    return (self.first_inv == nil or self.first_inv.passable) and
-           (self.last_inv == nil or self.last_inv.passable)
+    return (not self.inv[1] or self.inv[1].passable) and
+           (not self.inv[#self.inv] or self.inv[#self.inv].passable)
 end
 
 function Tile:get_y()

@@ -40,24 +40,20 @@ function is_item(thing)
 end
 
 function get_first_item(env)
-    thing = env.first_inv
-    while thing do
+    for _, thing in ipairs(env.inv) do
         if is_item(thing) then
-            break
+            return thing
         end
-        thing = thing.next_inv
     end
-    return thing
+    return nil
 end
 
 function get_all_items(env)
     local items = {}
-    local thing = env.first_inv
-    while thing do
+    for _, thing in ipairs(env.inv) do
         if is_item(thing) then
             table.insert(items, thing)
         end
-        thing = thing.next_inv
     end
     return items
 end
