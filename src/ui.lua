@@ -62,7 +62,9 @@ end
 function read_command(win)
     local key_code = curses.wgetch(win)
     local _, key_char = pcall(string.char, key_code)
-    if key_char == "D" then
+    if key_char == "\n" then
+        return "command"
+    elseif key_char == "D" then
         return "drop"
     elseif key_char == "d" then
         return "drop-first"
@@ -107,24 +109,27 @@ function write_message(win, game, message)
     game.message = message
 end
 
-function search_dialog(win, prompt, items)
+function search_dialog(win, prompt, items, desc)
+    desc = desc or function(item)
+        return type(item) == "string" and item or item.desc
+    end
     local pattern = ""
     while true do
         curses.clear()
         local y = 2
         local first_match = nil
         for _, item in ipairs(items) do
-            local desc = item.desc
-            local start, stop = string.find(desc, pattern, 1, true)
+            local item_desc = desc(item)
+            local start, stop = string.find(item_desc, pattern, 1, true)
             if start then
                 first_match = first_match or item
                 curses.move(y, 0)
                 curses.addstr(item == first_match and "(*) " or "( ) ")
-                curses.addstr(string.sub(desc, 1, start - 1))
+                curses.addstr(string.sub(item_desc, 1, start - 1))
                 curses.standout()
-                curses.addstr(string.sub(desc, start, stop))
+                curses.addstr(string.sub(item_desc, start, stop))
                 curses.standend()
-                curses.addstr(string.sub(desc, stop + 1, -1))
+                curses.addstr(string.sub(item_desc, stop + 1, -1))
                 y = y + 1
             end
         end

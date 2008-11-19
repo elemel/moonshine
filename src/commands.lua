@@ -42,6 +42,32 @@ local count_words = {
     [12] = "twelwe",
 }
 
+local commands = {
+    "command",
+    "down",
+    "drop",
+    "drop-first",
+    "east",
+    "inventory",
+    "inventory-first",
+    "look",
+    "look-first",
+    "north",
+    "northeast",
+    "northwest",
+    "south",
+    "southeast",
+    "southwest",
+    "take",
+    "take-first",
+    "up",
+    "west",
+}
+
+function command_command(win, game)
+    return ui.search_dialog(win, "Command: ", commands)
+end
+
 function drop_command(win, game)
     local items = util.get_all_items(game.hero)
     if #items == 0 then
@@ -153,36 +179,42 @@ function take_first_command(game)
 end
 
 function handle_command(command, win, game)
-    if directions[command] then
-        local dy, dx = unpack(directions[command])
-        local tile = util.get_neighbor_tile(game, game.hero.env, dy, dx)
-        if tile ~= nil then
-            if tile.first_inv ~= nil and tile.first_inv.alive then
-                actions.attack_action(game, game.hero, tile.first_inv)
-            elseif tile.first_inv ~= nil and tile.first_inv.mobile and
-                    not tile.first_inv.passable then
-                actions.push_action(game, game.hero, tile.first_inv)
-            else
-                actions.walk_action(game, game.hero, tile)
+    local new_command = command
+    while new_command do
+        command, new_command = new_command, nil
+        if directions[command] then
+            local dy, dx = unpack(directions[command])
+            local tile = util.get_neighbor_tile(game, game.hero.env, dy, dx)
+            if tile ~= nil then
+                if tile.first_inv ~= nil and tile.first_inv.alive then
+                    actions.attack_action(game, game.hero, tile.first_inv)
+                elseif tile.first_inv ~= nil and tile.first_inv.mobile and
+                        not tile.first_inv.passable then
+                    actions.push_action(game, game.hero, tile.first_inv)
+                else
+                    actions.walk_action(game, game.hero, tile)
+                end
             end
+        elseif command == "command" then
+            new_command = command_command(win, game)
+        elseif command == "drop" then
+            drop_command(win, game)
+        elseif command == "drop-first" then
+            drop_first_command(game)
+        elseif command == "inventory" then
+            inventory_command(win, game)
+        elseif command == "inventory-first" then
+            inventory_first_command(win, game)
+        elseif command == "look" then
+            look_command(win, game)
+        elseif command == "look-first" then
+            look_first_command(win, game)
+        elseif command == "take" then
+            take_command(win, game)
+        elseif command == "take-first" then
+            take_first_command(game)
+        elseif command == "wait" then
+            actions.walk_action(game, game.hero, game.hero.env)
         end
-    elseif command == "drop" then
-        drop_command(win, game)
-    elseif command == "drop-first" then
-        drop_first_command(game)
-    elseif command == "inventory" then
-        inventory_command(win, game)
-    elseif command == "inventory-first" then
-        inventory_first_command(win, game)
-    elseif command == "look" then
-        look_command(win, game)
-    elseif command == "look-first" then
-        look_first_command(win, game)
-    elseif command == "take" then
-        take_command(win, game)
-    elseif command == "take-first" then
-        take_first_command(game)
-    elseif command == "wait" then
-        actions.walk_action(game, game.hero, game.hero.env)
     end
 end
