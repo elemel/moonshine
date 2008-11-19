@@ -65,7 +65,7 @@ local function parse_tile(char)
 end
 
 local function parse_line(line)
-    return mimic.array(mimic.map(line, parse_tile))
+    return mimic.list(mimic.map(line, parse_tile))
 end
 
 local function not_blank(value)
@@ -76,7 +76,7 @@ local function parse_map(map)
     local lines = mimic.split(map, "\n")
     lines = mimic.filter(lines, not_blank)
     lines = mimic.map(lines, parse_line)
-    lines = mimic.array(lines)
+    lines = mimic.list(lines)
     for y, line in ipairs(lines) do
         for x, tile in ipairs(line) do
             tile.y = y

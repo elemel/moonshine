@@ -63,7 +63,7 @@ local function iter(iterable)
     end
 end
 
-local function tab(iterable)
+local function dict(iterable)
     local result = {}
     for key, value in iter(iterable) do
         result[key] = value
@@ -112,7 +112,7 @@ local function any(iterable, pred)
     return false
 end
 
-local function array(iterable)
+local function list(iterable)
     local result = {}
     for item in iter(iterable) do
         table.insert(result, item)
@@ -190,7 +190,7 @@ local function items(t)
 end
 
 local function join(iterable, separator)
-    return table.concat(array(iterable), (separator or " "))
+    return table.concat(list(iterable), (separator or " "))
 end
 
 local function keys(t)
@@ -317,15 +317,16 @@ end
 return {
     all = all,
     any = any,
-    array = array,
     blank = blank,
     enum = enum,
     equiv = equiv,
+    dict = dict,
     filter = filter,
     items = items,
     iter = iter,
     join = join,
     keys = keys,
+    list = list,
     map = map,
     product = product,
     range = range,
@@ -333,7 +334,6 @@ return {
     set = set,
     split = split,
     sum = sum,
-    tab = tab,
     values = values,
     zip_all = zip_all,
     zip_any = zip_any,

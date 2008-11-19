@@ -65,7 +65,12 @@ local commands = {
 }
 
 function command_command(win, game)
-    return ui.search_dialog(win, "Command: ", commands)
+    local command = ui.search_dialog(win, "Command: ", commands)
+    if not command then
+        ui.write_message(win, game, "Never mind.")
+        return
+    end
+    return command
 end
 
 function drop_command(win, game)

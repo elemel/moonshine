@@ -57,11 +57,6 @@ local function test_any()
     assert_false(mimic.any({false, false, false}))
 end
 
-local function test_array()
-    assert_equiv(mimic.array(mimic.range(1, 3)), {1, 2, 3})
-    assert_equiv(mimic.array("Lua"), {"L", "u", "a"})
-end
-
 local function test_blank()
     assert(mimic.blank(nil))
     assert(mimic.blank(false))
@@ -85,6 +80,11 @@ end
 
 local function test_join()
     assert(mimic.join({"a", "b", "c"}) == "a b c")
+end
+
+local function test_list()
+    assert_equiv(mimic.list(mimic.range(1, 3)), {1, 2, 3})
+    assert_equiv(mimic.list("Lua"), {"L", "u", "a"})
 end
 
 local function test_product()
@@ -121,7 +121,7 @@ local function test_repr()
 end
 
 local function test_split()
-    assert_equiv(mimic.array(mimic.split("The Dude abides.")),
+    assert_equiv(mimic.list(mimic.split("The Dude abides.")),
                  {"The", "Dude", "abides."})
 end
 
@@ -132,10 +132,10 @@ end
 local function test()
     test_all()
     test_any()
-    test_array()
     test_blank()
     test_equiv()
     test_join()
+    test_list()
     test_product()
     test_range()
     test_repr()

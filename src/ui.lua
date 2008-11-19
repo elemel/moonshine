@@ -48,10 +48,9 @@ function update_screen(win, game)
         end
     end
 
-    -- Update power bar.
+    -- Update status.
     curses.move(height + 3, 0)
-    curses.addstr("Power ")
-    curses.addstr(string.rep("=", math.floor(game.hero.power * (width - 6))))
+    curses.addstr("Power " .. math.floor(game.hero.power * 100) .. "%")
 
     -- Move cursor to hero.
     local screen_y, screen_x = to_screen_pos(game.hero:get_y(),
